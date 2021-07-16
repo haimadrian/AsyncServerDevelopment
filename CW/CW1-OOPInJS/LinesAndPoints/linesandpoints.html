@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lines and Points</title>
+    <script src="Point.js"></script>
+    <script src="Line.js"></script>
+</head>
+<body>
+    <script>
+        let p1 = new Point(1, 1);
+        let p2 = new Point(2, 2);
+        let line = new Line(p1, p2);
+
+        p1 = new Point(3, 3);
+        p2 = new Point(7, 7);
+        let line2 = new Line(p1, p2);
+        console.log(line.toString());
+        console.log(line2.toString());
+        console.log(`isParallel? ${Line.isParallel(line, line2)}`);
+    </script>
+</body>
+</html>

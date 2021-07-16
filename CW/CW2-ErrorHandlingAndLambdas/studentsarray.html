@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+You should develop a new library that includes a function that takes an array of strings
+(each string describes a specific student, and each string includes - in this order - the id, name, and average -
+and the separator character is ,) and returns an array of objects instantiated from Student, a class you should
+define accordingly.
+You should use the map function (Array.prototype.map).
+If the structure of a specific string is not the expected, an exception should be thrown.
+The library should include the definition for a class that describes the exception.
+ -->
+<head>
+    <meta charset="UTF-8">
+    <title>Array of Students</title>
+    <script src="Person.js"></script>
+    <script src="Student.js"></script>
+    <script src="IllegalStudentFormatException.js"></script>
+    <style>
+        td
+        {
+            padding:0 15px;
+        }
+        img
+        {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let studentsDataArray = ["Pikachu,025,92.3,https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png",
+            "Charmander,004,100,https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png",
+            "Squirtle,007,82.4,https://assets.pokemon.com/assets/cms2/img/pokedex/full/007.png",
+            "Bulbasaur,001,90.2,https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png"];
+
+        try {
+            let studentsArray = Student.fromArrayOfStudentData(studentsDataArray);
+            console.log(studentsArray);
+
+            let tableParts = ["<table><tr><td><b>Picture</b></td><td><b>Name</b></td><td><b>ID</b></td><td><b>Average</b></td></tr>"];
+            studentsArray.forEach(student => tableParts.push(`<tr><td><img src="${student.profilePicture}"/></td><td>`, [student.name, student.id, student.average.toString()].join("</td><td>"), "</td></tr>"));
+            tableParts.push("</table>");
+
+            document.write(tableParts.join(""));
+        } catch (e) {
+            console.log("Error has occurred: " + e.errorMessage);
+        }
+    </script>
+</body>
+</html>
