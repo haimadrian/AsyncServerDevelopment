@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculation</title>
+</head>
+<body>
+<h3>BMI Calculator</h3>
+<p>
+<!-- GET will send the inputs as QueryString. POST will send them as BODY.
+     GET http://www.abelski.com/courses/xhtml/bmi.php. -->
+<form action="http://localhost:1301/calc" method="get">
+    <label>Weight:
+        <input type="number" name="weight">
+    </label><br/>
+    <label>Height (centimeters):
+        <input type="number" name="height">
+    </label><br/>
+    <input type="submit">
+</form>
+</p>
+</body>
+</html>
