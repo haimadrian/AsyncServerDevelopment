@@ -1,0 +1,15 @@
+{
+  "name": "cw4-nodejsmodules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "MultiplicationTable/multiplicationTable.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ua-parser": "^0.3.5"
+  }
+}

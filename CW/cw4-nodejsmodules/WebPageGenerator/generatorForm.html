@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Page Generator</title>
+</head>
+<body>
+<h3>Web Page Generator</h3>
+<p>
+<!-- GET will send the inputs as QueryString. POST will send them as BODY.
+     GET http://www.abelski.com/courses/xhtml/bmi.php. -->
+<form action="http://localhost:1301/generateWebPage" method="post">
+    <label><b>Title:</b>
+        <input type="text" name="title"/>
+    </label><br/>
+    <label><b>Text:</b></label><br/>
+    <label><textarea name="text" cols="100" rows="20"></textarea></label><br/>
+    <label><b>File name:</b>
+        <input type="text" name="fileName"/>
+    </label><br/>
+    <input type="submit"/>
+</form>
+</p>
+</body>
+</html>
