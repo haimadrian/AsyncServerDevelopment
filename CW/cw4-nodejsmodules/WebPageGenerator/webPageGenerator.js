@@ -49,9 +49,10 @@ http.createServer(function (request, response) {
 
 
     let method = request.method.toUpperCase();
+    let url = request.url.toLowerCase();
     console.log(`${method} ${request.url}`);
 
-    if (request.url.toLowerCase().startsWith('/pages')) {
+    if (url.startsWith('/pages')) {
         let filePath = request.url.substring(1);
         fs.readFile(filePath, function (error, data) {
             console.log(`File read: ${filePath}`);
@@ -66,7 +67,7 @@ http.createServer(function (request, response) {
                 response.end(data);
             }
         });
-    } else if (request.url.toLowerCase().startsWith('/generatewebpage')) {
+    } else if (url.startsWith('/generatewebpage')) {
         switch (method) {
             case "GET": {
                 fs.readFile("generatorForm.html", function (error, data) {
