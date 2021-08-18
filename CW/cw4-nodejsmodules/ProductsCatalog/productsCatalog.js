@@ -64,7 +64,6 @@ function listProducts(req, res) {
             let tableParts = [`<table><tr>${cellAlignedCenter('th', 'Image')}${cellAlignedCenter('th', 'Name')}${cellAlignedCenter('th', 'Price')}</tr>`];
 
             for (const product of products) {
-                console.log(product);
                 tableParts.push(`<tr><td><img src="images/${product.image}" width="200px" alt="${product.image}"/></td>${cellAlignedCenter('td', product.name)}${cellAlignedCenter('td', product.price + "$")}</tr>`);
             }
 
@@ -74,7 +73,7 @@ function listProducts(req, res) {
     });
 }
 
-mongoose.connect(`mongodb+srv://nodejs:${process.env.MONGO_ATLAS_NODEJS_PWD}@Products.aeiil.mongodb.net/Products`,
+mongoose.connect(`mongodb+srv://ServerTeam:QazWSX123@cluster0.xjg7v.mongodb.net/products_haim?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true, keepAliveInitialDelay: 300000 }) // Keep alive for 5 minutes
         .catch(error => console.log(`Failed connecting to MongoDB. Reason: ${error}`));
 const db = mongoose.connection;
