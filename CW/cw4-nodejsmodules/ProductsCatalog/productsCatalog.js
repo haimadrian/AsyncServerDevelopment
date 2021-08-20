@@ -41,7 +41,7 @@ function getImage(req, res) {
         console.log(`File read: ${filePath}`);
 
         if (error != null) {
-            console.log("Error: " + error);
+            console.error("Error: " + error);
 
             res.writeHead(404, {'Content-Type': 'text/html'});
             res.end(createHtml('NOT FOUND', req.url + " is not found."));
@@ -59,11 +59,12 @@ function listProducts(req, res) {
 
     db.Product.find((error, products) => {
         if (error) {
-            console.log(`Failed finding documents. Reason: ${error}`);
+            console.error(`Failed finding documents. Reason: ${error}`);
         } else {
             let tableParts = [`<table><tr>${cellAlignedCenter('th', 'Image')}${cellAlignedCenter('th', 'Name')}${cellAlignedCenter('th', 'Price')}</tr>`];
 
             for (const product of products) {
+                product.printDetails();
                 tableParts.push(`<tr><td><img src="images/${product.image}" width="200px" alt="${product.image}"/></td>${cellAlignedCenter('td', product.name)}${cellAlignedCenter('td', product.price + "$")}</tr>`);
             }
 
@@ -76,22 +77,35 @@ function listProducts(req, res) {
 mongoose.connect(`mongodb+srv://ServerTeam:QazWSX123@cluster0.xjg7v.mongodb.net/products_haim?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true, keepAliveInitialDelay: 300000 }) // Keep alive for 5 minutes
         .catch(error => console.log(`Failed connecting to MongoDB. Reason: ${error}`));
-const db = mongoose.connection;
+const connection = mongoose.connection;
+const db = {};
 
-db.on('error', err => console.log(`MongoDB error: ${err}`));
+connection.on('error', console.error.bind(console, 'MongoDB error: '));
 
-db.once('open', async () => {
+connection.once('open', () => {
     console.log('Connected to MongoDB!');
 
-    // This shitty mongoose doesn't find "Product".. It insists on searching for "products"...
-    db.Product = mongoose.model('products', new mongoose.Schema({name: String, image: String, price: Number}));
+    let productsSchema = new mongoose.Schema({
+        name: String,
+        image: String,
+        price: Number
+    });
+
+    // Lambda does not work here. this refers to the parent scope's this
+    //productsSchema.methods.printDetails = () => console.log(`Name: ${this.name}, Price: ${this.price}$`);
+    productsSchema.methods.printDetails = function() {
+        console.log(`Name: ${this.name}, Price: ${this.price}$`);
+    }
+
+    // This returns a constructor function, sow we can do new db.Product()
+    db.Product = mongoose.model('products', productsSchema);
 
     // Launch the server
     http.createServer(function (req, res) {
         console.log(`${req.method} ${req.url}`);
 
         let url = req.url.toLowerCase();
-        if (url.startsWith('/images')) {
+        if (url.startsWith('/images') || url.startsWith('/favicon.ico')) {
             getImage(req, res);
         } else {
             listProducts(req, res);
