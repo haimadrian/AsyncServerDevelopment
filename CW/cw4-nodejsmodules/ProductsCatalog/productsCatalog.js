@@ -101,7 +101,7 @@ connection.once('open', () => {
     db.Product = mongoose.model('products', productsSchema);
 
     // Launch the server
-    http.createServer(function (req, res) {
+    let server = http.createServer(function (req, res) {
         console.log(`${req.method} ${req.url}`);
 
         let url = req.url.toLowerCase();
@@ -110,7 +110,11 @@ connection.once('open', () => {
         } else {
             listProducts(req, res);
         }
-    }).listen(1301);
-    
-    console.log('Server is listening on port 1301!');
+    });
+
+    server.on('listening', () => {
+        console.info('Server is listening on port 1301');
+    });
+
+    server.listen(1301);
 });
