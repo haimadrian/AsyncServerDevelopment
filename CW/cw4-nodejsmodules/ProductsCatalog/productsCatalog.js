@@ -57,7 +57,7 @@ function listProducts(req, res) {
         return `<${thOrTd} style="text-align:center">${text}</${thOrTd}>`;
     }
 
-    db.Product.find((error, products) => {
+    db.Product.find({ name: /pop/i}, ['name', 'image', 'price'], (error, products) => {
         if (error) {
             console.error(`Failed finding documents. Reason: ${error}`);
         } else {
