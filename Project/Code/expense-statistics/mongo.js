@@ -7,16 +7,15 @@ class Mongo {
         const mongoDbPwd = process.env.EXPENSE_DB_PWD;
         const connectionString = 'mongodb+srv://' +
             mongoDbUser + ':' + mongoDbPwd + '@' + mongoDbHost +
-            '/expense_manager?retryWrites=true&w=majority';
+            '/expense_statistics?retryWrites=true&w=majority';
 
         mongoose
-            .connect(connectionString,
-                {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    keepAlive: true,
-                    keepAliveInitialDelay: 300000
-                })
+            .connect(connectionString, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                keepAlive: true,
+                keepAliveInitialDelay: 300000
+            })
             .then(() => {
                 console.log('Connected to MongoDB!');
                 if (onOpen) {

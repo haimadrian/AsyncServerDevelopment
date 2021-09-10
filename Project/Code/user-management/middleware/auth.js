@@ -1,35 +1,33 @@
 /**
- * A middleware responsible for authorizing user before letting it access server
- * resources.
+ * A middleware responsible for authorizing user before letting it access protected
+ * server resources.
  */
 
-const jwt = require("jsonwebtoken");
+const jwtUtils = require("../model/jwt_util");
 
 const verifyToken = (req, res, next) => {
-    const bearerPrefix = 'bearer ';
-    let token = req.headers['Authorization'];
-
-    if (token && token.toLowerCase().startsWith(bearerPrefix)) {
-        token = token.substring(bearerPrefix.length - 1);
-    }
+    console.log('verifyToken');
+    const token = jwtUtils.extractTokenFromRequest(req);
 
     if (!token) {
-        token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-        if (!token) {
-            return res.status(401).json({
-                message: 'A token is required for authorization'
-            });
-        }
+        return res.status(401).json({
+            message: 'A token is required for authorization'
+        });
     }
 
-    try {
-        req.user = jwt.verify(token, process.env.TOKEN_KEY);
-    } catch (err) {
-        return res.status(401).json({ message: 'Invalid Token' });
-    }
-
-    return next();
+    // Verify the token and set user details in the request, so our web services
+    // can use it
+    jwtUtils.verify(token)
+        .then(claims => {
+            console.log('verifyToken: Success');
+            req.user = claims;
+            req.jwt = token;
+            next();
+        })
+        .catch(error => {
+            console.log('verifyToken: error - ', error);
+            res.status(401).json({message: 'Invalid Token'});
+        });
 };
 
 module.exports = verifyToken;

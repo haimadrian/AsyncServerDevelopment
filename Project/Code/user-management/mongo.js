@@ -10,8 +10,7 @@ class Mongo {
             '/user_management?retryWrites=true&w=majority';
 
         mongoose
-            .connect(connectionString,
-            {
+            .connect(connectionString, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
                 keepAlive: true,
