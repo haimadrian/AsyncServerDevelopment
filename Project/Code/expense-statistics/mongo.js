@@ -9,25 +9,26 @@ class Mongo {
             mongoDbUser + ':' + mongoDbPwd + '@' + mongoDbHost +
             '/expense_statistics?retryWrites=true&w=majority';
 
-        mongoose.connect(connectionString,
-            { useNewUrlParser: true,
+        mongoose
+            .connect(connectionString, {
+                useNewUrlParser: true,
                 useUnifiedTopology: true,
                 keepAlive: true,
-                keepAliveInitialDelay: 300000 },
-            error => {
+                keepAliveInitialDelay: 300000
+            })
+            .then(() => {
+                console.log('Connected to MongoDB!');
+                if (onOpen) {
+                    onOpen.apply();
+                }
+            })
+            .catch(error => {
                 if (error) {
-                    console.log(`Failed connecting to MongoDB. Reason: ${error}`);
+                    console.log('Failed connecting to MongoDB. Exiting.');
+                    console.error(error);
+                    process.exit(1);
                 }
             });
-
-        const connection = mongoose.connection;
-        connection.on('error', console.error.bind(console, 'MongoDB error: '));
-        connection.once('open', () => {
-            console.log('Connected to MongoDB!');
-            if (onOpen) {
-                onOpen.apply();
-            }
-        });
     }
 }
 

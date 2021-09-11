@@ -1,3 +1,7 @@
+// Configure process.env based on a .env file, thus avoiding of messing with
+// System environment variables
+require("dotenv").config();
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');

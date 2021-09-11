@@ -28,6 +28,10 @@ yarn-error.log*
 .ps1
 .json
 .eslintcache
+.env
 
 node_modules
 node_modules/*
+
+package-lock.json
+check.js
