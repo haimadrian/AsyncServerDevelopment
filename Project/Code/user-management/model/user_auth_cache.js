@@ -5,16 +5,20 @@ class UserAuthCache {
         this.#cache = {};
     }
 
+    static #toKey(userId) {
+        return userId.toString().toLowerCase();
+    }
+
     put(userId, jwt)/*: void*/ {
-        this.#cache[userId] = jwt;
+        this.#cache[UserAuthCache.#toKey(userId)] = jwt;
     }
 
     get(userId)/*: string*/ {
-        return this.#cache[userId];
+        return this.#cache[UserAuthCache.#toKey(userId)];
     }
 
     contains(userId)/*: boolean*/ {
-        return typeof this.#cache[userId] !== "undefined";
+        return typeof this.#cache[UserAuthCache.#toKey(userId)] !== "undefined";
     }
 }
 

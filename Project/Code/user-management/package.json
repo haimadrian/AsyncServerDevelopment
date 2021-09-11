@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "start-dev": "nodemon ./bin/www.js",
     "start": "node ./bin/www",
-    "test": "mocha ./test/*.js"
+    "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -15,9 +16,15 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
-    "istanbul": "^0.4.5",
-    "mocha": "^9.1.1",
-    "lodash": "^4.17.21"
+    "cross-env": "^7.0.3",
+    "jest": "^27.1.1",
+    "lodash": "^4.17.21",
+    "supertest": "^6.1.6"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }
