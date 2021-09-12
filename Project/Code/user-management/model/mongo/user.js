@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 // Define a schema
 const userSchema = new mongoose.Schema({
-    userId: String,
+    firebaseUserId: String,
+    email: String,
     firstName: String,
     lastName: String,
     phoneNumber: String,
