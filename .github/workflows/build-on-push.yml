@@ -11,4 +11,4 @@ jobs:
         working-directory: ./Project/Code
     steps:
       - uses: actions/checkout@v2
-      - run: cd user-management && npm install && npm run test
+      - run: cd user-management #&& npm install && npm run test
