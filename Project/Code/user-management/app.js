@@ -6,9 +6,12 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+const firebase = require('./firebase');
 const usersRouter = require('./routes/users');
 const authorizationRouter = require('./routes/authorization');
+
+// Initialize admin-sdk, for users authorization purposes.
+firebase.initializeApp();
 
 const app = express();
 

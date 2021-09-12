@@ -1,39 +1,55 @@
-import React from "react";
-import axios from "axios";
-import logo from './logo.svg';
+import React from 'react';
+import {
+    Route,
+    Switch,
+    Redirect,
+    useHistory
+} from 'react-router-dom';
 import './App.css';
+import './font-awesome.min.css';
+import Login from './view/user/login';
+import Logout from './view/user/logout';
+import userToken from './view/user/userToken';
+import Home from './view/home/home';
+import {auth} from "./firebase";
 
-export default class App extends React.Component {
-  state = {
-    appName: '',
-  };
+export default function App(props) {
+    props.history = useHistory();
+    userToken.loadToken();
 
-  componentDidMount() {
-    axios.get("/appname").then((response) => {
-      this.setState({ appName: response.data });
+    // Listen to id token updates so we can persist it.
+    auth.onIdTokenChanged(user => {
+        if (user !== null) {
+            user.getIdToken(true).then(idToken => {
+                userToken.saveToken(idToken);
+
+                // Go to home page after successful sign in
+                props.history.replace('/home');
+            });
+        }
     });
-  }
 
-  render() {
-    const { appName } = this.state;
     return (
         <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1>{appName} React App</h1>
-            <p>
-              Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
+            <Switch>
+                <Route exact path="/" render={() => {
+                    return (<Redirect to="/home"/>);
+                }
+                }
+                />
+                <Route path="/home" history={props.history}>
+                    <Home/>
+                </Route>
+                <Route path="/signin" history={props.history}>
+                    <Login/>
+                </Route>
+                <Route path="/signout" history={props.history}>
+                    <Logout setToken={userToken.saveToken} history={props.history}/>
+                </Route>
+                <Route path="/signup" history={props.history}>
+                    <Home/>
+                </Route>
+            </Switch>
         </div>
     );
-  }
 }
