@@ -1,5 +1,5 @@
 import React from 'react';
-import userToken from "../user/userToken";
+import {loadToken} from "../user/userToken";
 import "./home.css";
 import {Redirect} from "react-router-dom";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
@@ -10,7 +10,8 @@ import About from "./tabs/about"
 
 export default function Home() {
     // If user is not signed in, redirect to the sign in page.
-    if (userToken.token === undefined || userToken.token === '') {
+    let token = loadToken();
+    if (token === null || token === undefined || token === '') {
         return (<Redirect to="/signin"/>);
     }
 

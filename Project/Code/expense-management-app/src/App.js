@@ -9,22 +9,22 @@ import './App.css';
 import './font-awesome.min.css';
 import Login from './view/user/login';
 import Logout from './view/user/logout';
-import userToken from './view/user/userToken';
+import {saveToken, loadToken} from './view/user/userToken';
 import Home from './view/home/home';
 import {auth} from "./firebase";
 
-export default function App(props) {
-    props.history = useHistory();
-    userToken.loadToken();
+export default function App() {
+    let history = useHistory();
+    loadToken();
 
     // Listen to id token updates so we can persist it.
     auth.onIdTokenChanged(user => {
         if (user !== null) {
             user.getIdToken(true).then(idToken => {
-                userToken.saveToken(idToken);
+                saveToken(idToken);
 
                 // Go to home page after successful sign in
-                props.history.replace('/home');
+                history.replace('/home');
             });
         }
     });
@@ -37,17 +37,17 @@ export default function App(props) {
                 }
                 }
                 />
-                <Route path="/home" history={props.history}>
-                    <Home/>
+                <Route path="/home">
+                    <Home history={history}/>
                 </Route>
-                <Route path="/signin" history={props.history}>
-                    <Login/>
+                <Route path="/signin">
+                    <Login history={history}/>
                 </Route>
-                <Route path="/signout" history={props.history}>
-                    <Logout setToken={userToken.saveToken} history={props.history}/>
+                <Route path="/signout">
+                    <Logout setToken={saveToken} history={history}/>
                 </Route>
-                <Route path="/signup" history={props.history}>
-                    <Home/>
+                <Route path="/signup">
+                    <Home history={history}/>
                 </Route>
             </Switch>
         </div>

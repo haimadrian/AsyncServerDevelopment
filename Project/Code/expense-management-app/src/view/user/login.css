@@ -116,6 +116,9 @@
     padding-left: 1rem;
     padding-right: 1rem;
     color: rgba(255, 84, 84, 0.9);
+    word-break: break-word;
+    max-width: 20rem;
+    white-space: pre-wrap;
 }
 
 .edit {
