@@ -1,11 +1,11 @@
 const currency = {
-    AUD: 'Australian Dollar',
-    CAD: 'Canadian Dollar',
-    EUR: 'Euro',
-    GBP: 'Pound',
-    ILS: 'New Israeli Shekel',
-    JPY: 'Yen',
-    USD: 'US Dollar'
+    USD: '($ US)',
+    AUD: '($ AUC)',
+    CAD: '($ AUC)',
+    EUR: '€',
+    GBP: '¥',
+    ILS: '₪',
+    JPY: '¥'
 }
 
 module.exports = currency;

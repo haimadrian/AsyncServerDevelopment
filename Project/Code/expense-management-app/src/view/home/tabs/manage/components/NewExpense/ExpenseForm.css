@@ -4,23 +4,47 @@
     gap: 1rem;
     margin-bottom: 1rem;
     text-align: left;
-  }
-  
-  .new-expense__control label {
+}
+
+.new-expense__control label {
     font-weight: bold;
     margin-bottom: 0.5rem;
     display: block;
-  }
-  
-  .new-expense__control input {
+}
+
+.new-expense__control input {
     font: inherit;
     padding: 0.5rem;
     border-radius: 6px;
     border: 1px solid #ccc;
-    width: 20rem;
+    width: 15.25rem;
     max-width: 100%;
-  }
-  
-  .new-expense__actions {
-    text-align: right;
-  }
+}
+
+.combobox-inputs {
+    font: inherit;
+    width: 16.5rem;
+    max-width: 100%;
+
+}
+.combobox-inputs-currency {
+    font: inherit;
+    width: 15.2rem;
+    max-width: 100%;
+}
+.combobox-inputs-currency label{
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.combobox-inputs label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.new-expense__actions {
+    text-align: center;
+}
+
