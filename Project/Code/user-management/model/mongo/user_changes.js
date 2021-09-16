@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 
 // Define a schema
 const userChangesSchema = new mongoose.Schema({
-    userId: String,
+    firebaseUserId: String,
     changes: [{
         propertyName: String,
         propertyValue: {}
     }],
-    version: Number
+    version: Number,
+    updateDate: Date
 });
 
 // Export function to create "UserChanges" model

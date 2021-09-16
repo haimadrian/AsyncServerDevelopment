@@ -1,38 +1,29 @@
 import React from 'react';
-import {GoogleAuthProvider} from "firebase/auth";
 import ReactTooltip from "react-tooltip";
-import './login.css';
+import {Redirect} from "react-router-dom";
+import {GoogleAuthProvider} from "firebase/auth";
+import './signin.css';
 import {auth} from "../../firebase";
 import {loadToken} from "./userToken";
-import {Redirect} from "react-router-dom";
+import FormInput from "../components/forminput";
+import Logo from "../components/logo";
 
-export default function Login() {
+export default function SignIn(props) {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
     const [isThinking, setIsThinking] = React.useState(false);
     const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = React.useState(true);
 
-    // If user is already signed in, redirect to the home page.
-    let token = loadToken();
-    if (token !== null && token !== undefined && token !== '') {
-        return (<Redirect to="/home"/>);
-    }
-
     const onFormSubmit = async e => {
         // Prevent from default action to be taken, as we handle it here
         e.preventDefault();
+
         setIsSubmitButtonEnabled(false);
         setErrorMessage('');
         setIsThinking(true);
 
-        let credentials = {
-            username: username,
-            password: password
-        };
-
-        auth.signInWithEmailAndPassword(credentials.username, credentials.password)
-            .then(() => {setIsThinking(false); setIsSubmitButtonEnabled(true);})
+        auth.signInWithEmailAndPassword(username, password)
             .catch(error => userSignInFailure(error, setErrorMessage, setIsThinking, setIsSubmitButtonEnabled));
     };
 
@@ -57,30 +48,39 @@ export default function Login() {
         });
 
         auth.signInWithRedirect(provider)
-            .then(() => {setIsThinking(false); setIsSubmitButtonEnabled(true);})
             .catch(error => userSignInFailure(error, setErrorMessage, setIsThinking, setIsSubmitButtonEnabled));
+    }
+
+    // If user is already signed in, redirect to the home page.
+    let token = loadToken();
+    if (token !== null && token !== undefined && token !== '') {
+        return (<Redirect to="/home"/>);
     }
 
     return (
         <div className='frame'>
-            <Logo/>
+            <Logo title={'Sign In'}/>
             <form onSubmit={onFormSubmit}>
-                <FormInput type='email' placeholder='email'
+                <FormInput type='email' placeholder='email' isRequired={true}
+                           drawable='fa fa-at'
                            onChange={e => setUsername(e.target.value)}/>
-                <FormInput type='password' placeholder='password'
+                <FormInput type='password' placeholder='password' isRequired={true}
+                           drawable='fa fa-key'
                            onChange={e => setPassword(e.target.value)}/>
-                <button type="submit" disabled={!isSubmitButtonEnabled}>Sign In</button>
+                <button className="submit-button" type="submit"
+                        disabled={!isSubmitButtonEnabled}>Sign In
+                </button>
             </form>
-            {isThinking ? <i className="fa fa-spinner fa-pulse fa-3x fa-fw"/> : null}
+            {isThinking ? <i id="loading" className="fa fa-spinner fa-pulse fa-3x fa-fw"/> : null}
             <label id='labelError'>{errorMessage}</label>
             <OtherSignInMethods onGoogleClick={onGoogleButtonClicked}
                                 onFacebookClick={onFacebookButtonClicked}/>
-            <SignUp/>
+            <SignUp history={props.history}/>
         </div>
     );
 };
 
-function userSignInFailure(error, setErrorMessage, setIsThinking, setIsSubmitButtonEnabled) {
+export function userSignInFailure(error, setErrorMessage, setIsThinking, setIsSubmitButtonEnabled) {
     /**
      * Error message from Firebase reveals that it is a "Firebase:" error, so we
      * remove this information from the error message.
@@ -129,27 +129,6 @@ function userSignInFailure(error, setErrorMessage, setIsThinking, setIsSubmitBut
     console.error(error);
 }
 
-const Logo = () => {
-    return (<div className="logo">
-        <i><img src={"/logo192.png"} alt={"Logo"}/></i>
-        <span> Sign in </span>
-    </div>);
-}
-
-// Generic input field
-const FormInput = (props) => {
-    return (
-        <div className='row'>
-            <label id='label'>{props.description}</label>
-            <div className='edit'>
-                <input type={props.type} placeholder={props.placeholder}
-                       onChange={props.onChange} required autoComplete='true'/>
-                <label className='labelDrawable'/>
-            </div>
-        </div>
-    );
-}
-
 const OtherSignInMethods = (props) => {
     return (
         <div id="alternativeLogin">
@@ -171,12 +150,12 @@ const OtherSignInMethods = (props) => {
     );
 }
 
-const SignUp = () => {
+const SignUp = (props) => {
     return (
         <div className='signup'>
-            <a href='/signup'>SIGN UP</a>
+            <label id="link" onClick={() => props.history.replace('/signup')}>SIGN UP</label>
             <label/>
-            <a href='/reset'>Help</a>
+            <label id="link" onClick={() => props.history.push('/resetpass')}>Help</label>
         </div>
     );
 }

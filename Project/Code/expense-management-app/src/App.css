@@ -1,19 +1,39 @@
 .App {
     text-align: center;
-    padding: 20px;
+    box-sizing: border-box;
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
+.submit-button {
+    border-radius: 25px;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    height: 3rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
     color: white;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 700;
+    background: linear-gradient(90deg, #98c1d9, #ee6c4d);
+    border: 0;
+    cursor: pointer;
+    transition: opacity 0.3s linear;
+    box-shadow: inset 0 0 1rem 0 rgba(152, 193, 217, 0.7);
 }
 
-.App-link {
-    color: #61dafb;
+.submit-button:hover {
+    opacity: 0.75;
+}
+
+#loading {
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    color: #ee6c4dcc;
+    font-size: 10rem;
+    z-index: 10;
+    width: 10rem;
+    height: 10rem;
+    left: calc(50% - 5rem);
+    top: calc(50% - 5rem);
 }

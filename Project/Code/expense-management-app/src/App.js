@@ -7,24 +7,37 @@ import {
 } from 'react-router-dom';
 import './App.css';
 import './font-awesome.min.css';
-import Login from './view/user/login';
-import Logout from './view/user/logout';
 import {saveToken, loadToken} from './view/user/userToken';
-import Home from './view/home/home';
 import {auth} from "./firebase";
+import SignIn from './view/user/signin';
+import SignOut from './view/user/signout';
+import Home from './view/home/home';
+import SignUp from "./view/user/signup";
+import axios from "axios";
 
 export default function App() {
     let history = useHistory();
-    loadToken();
+    let token = loadToken();
+    if (token !== null && token !== undefined && token !== '') {
+        // Set Authorization header globally, so we do not have to repeat it.
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
 
     // Listen to id token updates so we can persist it.
     auth.onIdTokenChanged(user => {
         if (user !== null) {
-            user.getIdToken(true).then(idToken => {
-                saveToken(idToken);
+            user.getIdToken().then(idToken => {
+                if (idToken?.trim().length > 0) {
+                    saveToken(idToken);
 
-                // Go to home page after successful sign in
-                history.replace('/home');
+                    // Set Authorization header globally, so we do not have to repeat it.
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${idToken}`;
+
+                    // Go to home page after successful sign in
+                    if (history.location.pathname !== '/home') {
+                        history.replace('/home');
+                    }
+                }
             });
         }
     });
@@ -41,12 +54,15 @@ export default function App() {
                     <Home history={history}/>
                 </Route>
                 <Route path="/signin">
-                    <Login history={history}/>
+                    <SignIn history={history}/>
                 </Route>
                 <Route path="/signout">
-                    <Logout setToken={saveToken} history={history}/>
+                    <SignOut setToken={saveToken} history={history}/>
                 </Route>
                 <Route path="/signup">
+                    <SignUp history={history}/>
+                </Route>
+                <Route path="/resetpass">
                     <Home history={history}/>
                 </Route>
             </Switch>

@@ -1,0 +1,159 @@
+.row {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 90%;
+}
+
+#label {
+    align-self: start;
+    color: rgba(150, 150, 150, 0.9);
+}
+
+.edit {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    font-size: 1rem;
+    box-shadow: inset 0 -3px 0 0 rgba(187, 187, 187, 0.2);
+    transition: box-shadow 0.3s linear;
+    box-sizing: border-box;
+    justify-content: start;
+}
+
+.input {
+    width: 100%;
+    border: none;
+    font-size: 1rem;
+    text-align: left;
+    margin: 0.4rem 0 0.4rem 1rem;
+    background: none;
+    color: #3D5A80;
+    box-sizing: border-box;
+}
+
+.input:disabled,
+.input[disabled] {
+    color: rgba(187, 187, 187, 0.8);
+    cursor: not-allowed;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.input::placeholder,
+.input::-webkit-input-placeholder {
+    color: lightgray;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+.input::placeholder:hover,
+.input::placeholder:focus {
+    opacity: 0;
+}
+
+.input::-webkit-input-placeholder {
+    color: lightgray;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+.input:hover::-webkit-input-placeholder,
+.input:focus::-webkit-input-placeholder {
+    opacity: 0;
+}
+
+.input:focus + #labelDrawable {
+    opacity: 1;
+    color: #98C1D9;
+}
+
+.input2:focus-within + #labelDrawable {
+    opacity: 1;
+    color: #98C1D9;
+}
+
+.edit:focus-within {
+    box-shadow: inset 0 -3px 0 0 #98C1D9;
+    outline: none;
+}
+
+#labelDrawable {
+    font-family: FontAwesome, monospace;
+    color: lightgray;
+    font-size: 1rem;
+    padding: 0.4rem 0 0.1rem 0.5rem;
+    opacity: 0.6;
+    transition: opacity 0.25s linear, color 0.25s linear;
+}
+
+/****************** Overrides for DropdownList ******************/
+
+.rw-widget-picker {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: calc(100% - 1rem) !important;
+    min-width: calc(100% - 1rem) !important;
+    max-height: 1rem !important;
+    font-size: 1rem !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin-left: 0.9rem !important;
+    color: #3D5A80 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+.rw-dropdown-list-input {
+    width: 100% !important;
+    font-size: 1rem !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-self: center !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+}
+
+.rw-popup-container {
+    padding: 0 1rem !important;
+}
+
+.rw-popup {
+    text-align: left !important;
+    margin-left: 1rem !important;
+    padding: 0 !important;
+}
+
+.rw-popup .rw-list {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rw-input {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-width: calc(100% - 1rem) !important;
+}
+
+.rw-widget-input {
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    min-width: calc(100% - 1rem) !important;
+}
+
+.rw-list {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.rw-list-option, .rw-list-option-create {
+    padding: 0.1rem 0 !important;
+    height: 100% !important;
+}

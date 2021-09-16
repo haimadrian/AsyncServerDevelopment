@@ -1,15 +1,15 @@
 class UserAuthCache {
-    #cache/*: { [id: string] : string; }*/ = {};
+    #cache/*: { [id: string] : [uid: string, email: string]; }*/ = {};
 
     constructor() {
         this.#cache = {};
     }
 
-    put(jwt, userId)/*: void*/ {
-        this.#cache[jwt] = userId;
+    put(jwt, userData)/*: void*/ {
+        this.#cache[jwt] = userData;
     }
 
-    get(jwt)/*: string*/ {
+    get(jwt)/*: {string, string}*/ {
         return this.#cache[jwt];
     }
 

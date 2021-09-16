@@ -13,6 +13,7 @@ const authorizeRequest = (req, res, next) => {
                 res.status(response.status).json({message: response.data.message});
             } else {
                 req.userId = response.data.userId;
+                req.userEmail = response.data.userEmail;
                 next();
             }
         })
