@@ -7,19 +7,26 @@ const axios = require('axios');
 const authorizeRequest = (req, res, next) => {
     console.log('verifyToken');
 
-    return axios.get(process.env.APP_SERVER_USER_URL)
+    let config = {
+        headers: {
+            authorization: req.headers['authorization']
+        }
+    };
+
+    return axios.get(process.env.APP_SERVER_USER_URL, config)
         .then(response => {
-            if (response.status !== 200) {
-                res.status(response.status).json({message: response.data.message});
-            } else {
-                req.userId = response.data.userId;
-                req.userEmail = response.data.userEmail;
-                next();
-            }
+            req.userId = response.data.userId;
+            req.userEmail = response.data.userEmail;
+            next();
         })
         .catch(error => {
-            console.error(error);
-            res.status(403).json({message: 'Invalid Token'});
+            let errorMessage = error.response?.data?.message;
+            if (!errorMessage) {
+                errorMessage = error.toString();
+            }
+
+            console.error(errorMessage);
+            res.status(error.status).json({message: errorMessage});
         });
 };
 
