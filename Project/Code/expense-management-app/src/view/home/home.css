@@ -2,72 +2,36 @@
 
 /* Application main screen */
 .Home {
-    position: page;
-    text-align: right;
+    display: flex;
+    flex-direction: column;
     color: #3D5A80;
-    background-color: #ee6c4d;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-    pointer-events: none;
-    border-radius: 0;
-}
-
-/* Application's logo */
-.Home-logo {
-    text-align: left;
-    height: 9vh;
-    pointer-events: all;
-    margin: 0 2rem 1rem 1rem;
-    padding: 0;
-    min-height: 9vh;
-    opacity: 0.6;
-    transition: opacity 0.5s linear;
-}
-
-.Home-logo:hover {
-    opacity: 1;
+    box-sizing: border-box;
 }
 
 /* Where we write the caption of the application. "Mathematical Tools Calculator" */
 .Home-header {
+    position: fixed;
     display: flex;
     flex-direction: row;
-    text-align: left;
-    vertical-align: center;
-    font-size: calc(5vmin + 2px);
-    word-wrap: break-word;
-    font-style: oblique;
-    font-weight: bold;
-    border-radius: 0;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 10vh;
+    height: 5.5rem;
     transition: 0.5s;
-    padding-top: 0.6rem;
-    z-index: 0;
-    position: absolute;
+    padding: 0.5rem 1rem;
     background: linear-gradient(90deg, #98c1d9, #ee6c4d);
+    box-shadow: inset 0 0 1rem 0.5rem rgba(152, 193, 217, 0.8);
+    box-sizing: border-box;
+    z-index: 10;
 }
 
 .signout {
-    position: absolute;
-    top: 7vh;
-    right: 1rem;
-    pointer-events: all;
+    width: 5rem;
+    margin: auto 0 0 auto;
+    float: bottom;
 }
 
 .signout a {
-    display: block;
     color: white;
-    font-size: 16px;
-    font-style: oblique;
-    font-weight: bold;
-    text-align: center;
-    outline-color: rgba(61, 90, 128, 0.7);
+    font-size: 0.9rem;
     text-decoration: none;
 }
 
@@ -75,82 +39,99 @@
     text-decoration: underline;
 }
 
+/* Align header */
+.Home-header .header-title {
+    position: absolute;
+    text-align: center;
+    left: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-left: 1.5rem;
+    vertical-align: center;
+    font-size: calc(5vmin + 2px);
+    word-wrap: break-word;
+    font-style: oblique;
+    font-weight: bold;
+}
+
+.home-tabs {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.react-tabs {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    min-height: calc(100vh - 5.5rem);
+    margin-top: 5.5rem;
+    color: white;
+    box-sizing: border-box;
+}
+
+.react-tabs__tab-list {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: #ffffff11;
+}
+
+.react-tabs__tab {
+    list-style: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.react-tabs__tab--selected {
+    box-sizing: border-box;
+}
+
+.react-tabs__tab-panel {
+    display: contents;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    box-sizing: border-box;
+}
+
+.react-tabs__tab-panel--selected {
+    display: flex;
+    position: center;
+    box-sizing: border-box;
+}
+
 /* Responsive UI. When the screen width below 620px (for mobile),
 we use horizontal tabs where their content below them */
 @media (max-width: 620px ) {
-
-    /* Align header */
-    .Home-header .header-title {
-        text-align: center;
-        vertical-align: center;
-        position: relative;
-        margin-top: 1.5rem;
-    }
-
     .react-tabs {
-        display: flex;
         flex-direction: column;
-        color: #3D5A80;
-        background: #98c1d9;
-        margin-top: 9vh;
-        margin-left: 0;
-        margin-right: 0;
-        left: 0;
-        padding: 0;
-        height: 91%;
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 0;
-        pointer-events: auto;
-        box-shadow: 0 0 2vmin 0 rgba(97, 218, 251, 0.7);
-        z-index: 1;
-        position: absolute;
     }
 
     .react-tabs__tab-list {
-        display: flex;
         flex-direction: row;
-        width: 100%;
-        height: 100px;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        background: #e0fbfc;
-        text-align: center;
+        min-height: 4rem;
+        max-height: 4rem;
     }
 
     .react-tabs__tab {
-        list-style: none;
-        padding-top: 0;
-        margin-top: 0;
-        justify-content: center;
-        justify-items: center;
-        vertical-align: top;
-        cursor: pointer;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .react-tabs__tab--selected {
-        background: #98c1d9;
-        border-color: #1c1d1f;
-        border-top: 6px solid #ee6c4d;
-        justify-content: center;
-        justify-items: center;
-        vertical-align: center;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
     }
 
     .react-tabs__tab-panel {
-        display: none;
-        background: #98c1d9;
-        margin-top: 2vmin;
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
+        left: 0;
+        right: 0;
+        top: 9.5rem;
     }
 
-    .react-tabs__tab-panel--selected {
-        display: block;
+    .react-tabs__tab--selected {
+        border-top: 0.3rem solid #ee6c4d;
     }
 }
 
@@ -158,66 +139,25 @@ we use horizontal tabs where their content below them */
 where their content displayed next to them (right) */
 @media (min-width: 620px ) {
     /* Align header */
-    .Home-header .header-title {
-        text-align: center;
-        vertical-align: center;
-        position: relative;
-        margin-top: 0.5rem;
-    }
-
-    .react-tabs {
-        display: flex;
-        color: #3D5A80;
-        background: #98c1d9;
-        margin-top: 9vh;
-        margin-left: 0;
-        margin-right: 0;
-        left: 0;
-        padding: 0;
-        height: 91%;
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: 0;
-        pointer-events: auto;
-        box-shadow: 0 0 2vmin 0 rgba(97, 218, 251, 0.7);
-        z-index: 1;
-        position: absolute;
-    }
-
     .react-tabs__tab-list {
-        display: flex;
         flex-direction: column;
-        width: 200px;
-        margin: 0;
-        padding: 0;
-        background: #e0fbfc;
-        text-align: center;
+        min-width: 8rem;
+        max-width: 8rem;
         font-size: calc(2vmin + 3px);
     }
 
     .react-tabs__tab {
-        list-style: none;
-        padding-left: 0;
         cursor: pointer;
     }
 
-    .react-tabs__tab--selected {
-        background: #98c1d9;
-        border-color: #1c1d1f;
-        border-left: 6px solid #ee6c4d;
-    }
-
     .react-tabs__tab-panel {
-        display: none;
-        background: #98c1d9;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        width: 100%;
-        height: 100%;
+        left: 8rem;
+        top: 5.5rem;
     }
 
-    .react-tabs__tab-panel--selected {
-        display: block;
+    .react-tabs__tab--selected {
+        border-left: 0.3rem solid #ee6c4d;
+        background-color: #98C1D944;
     }
 }
 

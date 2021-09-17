@@ -9,6 +9,7 @@ router.get('/', auth, function (req, res) {
     res.status(200).json({
         message: '200 OK',
         userId: req.userId,
+        userEmail: req.userEmail,
         jwt: req.jwt
     });
 });

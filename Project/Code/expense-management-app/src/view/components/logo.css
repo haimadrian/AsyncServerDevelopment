@@ -1,0 +1,24 @@
+.logo {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo img {
+    opacity: 0.6;
+    transition: opacity 0.5s linear;
+}
+
+.logo img:hover {
+    opacity: 1;
+}
+
+.logo i {
+    display: block;
+}
+
+.logo span {
+    color: #3D5A80;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
