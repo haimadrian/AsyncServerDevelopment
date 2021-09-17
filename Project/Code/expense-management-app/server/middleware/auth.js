@@ -13,7 +13,7 @@ const authorizeRequest = (req, res, next) => {
         }
     };
 
-    return axios.get(process.env.APP_SERVER_USER_URL, config)
+    return axios.get(`${process.env.APP_SERVER_USER_URL}/auth`, config)
         .then(response => {
             req.userId = response.data.userId;
             req.userEmail = response.data.userEmail;
@@ -26,7 +26,7 @@ const authorizeRequest = (req, res, next) => {
             }
 
             console.error(errorMessage);
-            res.status(error.status).json({message: errorMessage});
+            res.status(error.status || 500).json({ message: errorMessage });
         });
 };
 
