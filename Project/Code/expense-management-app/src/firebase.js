@@ -14,3 +14,9 @@ const firebaseConfig = {
 
 const app = firebase.initializeApp(firebaseConfig, 'ExpenseManagement');
 export const auth = app.auth();
+
+export async function potentiallyRefreshToken(error) {
+    if ((error.status === 403) || (error.response?.status === 403)) {
+        return auth.currentUser.getIdTokenResult(true);
+    }
+}

@@ -19,15 +19,19 @@ const verifyToken = (req, res, next) => {
 
     // Cache it to reduce requests that we send to firebase.
     if (userAuthCache.contains(token)) {
-        req.userId = userAuthCache.get(token);
+        let userData = userAuthCache.get(token);
+        req.userId = userData.uid;
+        req.userEmail = userData.email;
         req.jwt = token;
+        next();
     } else {
         // Verify the token and set user details in the request, so our web services
         // can use it
         firebase.app.auth().verifyIdToken(token)
             .then((decodedToken) => {
-                userAuthCache.put(token, decodedToken.uid);
+                userAuthCache.put(token, {uid: decodedToken.uid, email: decodedToken.email});
                 req.userId = decodedToken.uid;
+                req.userEmail = decodedToken.email;
                 req.jwt = token;
                 next();
             })
