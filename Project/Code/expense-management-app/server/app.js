@@ -11,6 +11,7 @@ const cors = require('cors');
 
 const appNameRouter = require('./routes/appname');
 const firebaseConfRouter = require('./routes/firebaseconf');
+const expensesRouter = require('./routes/expenses');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/appname', appNameRouter);
 app.use('/firebase', firebaseConfRouter);
+app.use('/expense', expensesRouter);
 
 // Any route we have not handled at the server, will be handled by client's
 // routing (index.html)
@@ -38,12 +40,12 @@ app.use((req, res, next) => {
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
