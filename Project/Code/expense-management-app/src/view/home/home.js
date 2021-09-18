@@ -4,7 +4,7 @@ import "./home.css";
 import {Redirect} from "react-router-dom";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import Profile from "./tabs/profile/profile"
-import Manage from "./tabs/manage"
+import Manage from "./tabs/manage/manage"
 import Statistics from "./tabs/statistics"
 import About from "./tabs/about"
 import Logo from "../components/logo";

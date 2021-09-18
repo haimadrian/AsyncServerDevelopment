@@ -29,7 +29,7 @@ router.post('/', auth, (req, res) => {
     }
 });
 
-router.get('/fetch', auth, (req, res) => {
+router.post('/fetch', auth, (req, res) => {
     const ITEMS_PER_WINDOW = 10;
     console.log('hii from getTransactions');
 

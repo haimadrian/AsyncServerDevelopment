@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./ExpenseForm.css";
 import "react-widgets/styles.css";
 import Combobox from "react-widgets/Combobox";
+import FormInput from "../../../../../components/forminput";
 
 const ExpenseForm = (props) => {
 
@@ -114,7 +115,7 @@ const ExpenseForm = (props) => {
           </div>
           <div className='combobox-inputs-currency'>
             <label>Currency</label>
-            <Combobox defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} data={Object.keys(currency)}/>
+            <FormInput type='DropdownList' defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>
           </div>
           <div className="combobox-inputs">
             <label>Category</label>
