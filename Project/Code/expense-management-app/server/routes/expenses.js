@@ -71,4 +71,16 @@ router.get('/fetch/category/:category', auth, (req, res) => {
 
 });
 
+
+/* -------------------------- get page number total -------------------------- */
+router.get('/num_of_pages', auth, (req, res) => {
+    console.log('hii from get page number');
+
+    expense.countDocuments({ userId: req.userId })
+        .then(num_of_pages => res.status(200).json(num_of_pages))
+        .catch(error => res.status(500).json({ message: error.message }));
+
+});
+
+
 module.exports = router;
