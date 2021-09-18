@@ -1,41 +1,56 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Pagination.css';
+import logo from "../../../../../components/logo";
 
-export default function Pagination({ data, RenderComponent, title, pageLimit, dataLimit }) {
-    const [pages] = useState(Math.round(data.length / dataLimit));
+export default function Pagination({movePages,data, RenderComponent, totalPage, dataLimit }) {
+    //const [pages,setPages] = useState(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
 
+    let pages = Math.round(totalPage / dataLimit);
+
+    if (pages % 10 != 0) {
+        pages = pages + 1;
+    }
+
+    // console.log("data - " ,data.length)
+    // console.log("Current Page - ",currentPage);
+     console.log("page Calc", Math.round(totalPage / dataLimit) +1);
+    // console.log("I Change Page" ,pages , "Page sum is " , totalPage ," / " , dataLimit);
+
     function goToNextPage() {
+        console.log("Move Page",movePages)
         setCurrentPage((page) => page + 1);
+        movePages(currentPage);
     }
 
     function goToPreviousPage() {
         setCurrentPage((page) => page - 1);
+        console.log("prev page", currentPage)
+        movePages(currentPage-2);
     }
 
     function changePage(event) {
         const pageNumber = Number(event.target.textContent);
         setCurrentPage(pageNumber);
+        movePages(pageNumber-1);
     }
 
     const getPaginatedData = () => {
-        const startIndex = currentPage * dataLimit - dataLimit;
-        const endIndex = startIndex + dataLimit;
-        return data.slice(startIndex, endIndex);
+        return data;
     };
 
     const getPaginationGroup = () => {
-        let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-        return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
+         let start = Math.floor((currentPage - 1) / totalPage) * totalPage;
+        // const arr = new Array(pageLimit).fill().map((_, idx) => start + idx + 1)
+        const arr = new Array(pages).fill().map((_, idx) => start + idx + 1)
+        return arr;
     };
 
     return (
         <div>
             {/* show the posts, 10 posts at a time */}
             <div className="dataContainer">
-                {getPaginatedData().map((d, idx) => (
-                    <RenderComponent key={idx} data={d} />
-                ))}
+                {<RenderComponent items={getPaginatedData()} />}
             </div>
 
             {/* show the pagiantion
@@ -47,8 +62,7 @@ export default function Pagination({ data, RenderComponent, title, pageLimit, da
                 {/* previous button */}
                 <button
                     onClick={goToPreviousPage}
-                    className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
-                >
+                    className={`prev ${currentPage === 1 ? 'disabled' : ''}`}>
                     prev
                 </button>
 
@@ -57,8 +71,7 @@ export default function Pagination({ data, RenderComponent, title, pageLimit, da
                     <button
                         key={index}
                         onClick={changePage}
-                        className={`paginationItem ${currentPage === item ? 'active' : null}`}
-                    >
+                        className={`paginationItem ${currentPage === item ? 'active' : null}`}>
                         <span>{item}</span>
                     </button>
                 ))}
@@ -66,8 +79,7 @@ export default function Pagination({ data, RenderComponent, title, pageLimit, da
                 {/* next button */}
                 <button
                     onClick={goToNextPage}
-                    className={`next ${currentPage === pages ? 'disabled' : ''}`}
-                >
+                    className={`next ${currentPage === pages ? 'disabled' : ''}`}>
                     next
                 </button>
             </div>

@@ -4,20 +4,16 @@ import NewExpense from "./components/NewExpense/NewExpense";
 import axios from "axios";
 import urls from "../../../../model/backend_url";
 import {potentiallyRefreshToken} from "../../../../firebase";
-import ExpenseItem from "./components/Expenses/ExpenseItem";
-import {logEvent} from "firebase/firebase-analytics";
-
-
-
 
 //App is Main intrance
 const App = () => {
 
     let dataFromServer = [];
     let limit = 10;
-    let page = 0;
     let newDate = 0
     const [expenses, setExpenses] = useState([]);
+    const [pages, setPages ] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     const httpErrorHandler = useCallback(async (error) => {
         let errorMessage = error.response?.data?.message;
@@ -28,13 +24,26 @@ const App = () => {
         return potentiallyRefreshToken(error);
     }, []);
 
-    function getData() {
+
+    axios.post(urls.totalPages)
+        .then(response => {
+            console.log("total : " , response.data);
+            setTotalPages(response.data);
+
+        })
+        .catch(httpErrorHandler);
+
+
+    function getData(page) {
+        console.log("Page from menage " , page);
+
         axios.post(urls.expenseFetch, {page: page, limit: limit})
             .then(response => {
-                for (let idx=0 ; idx < limit ;idx++) {
+                console.log("Page from menage on Post" , page);
+
+                for (let idx=0 ; idx < response.data.length ;idx++) {
                     newDate = new Date(response.data[idx].date);
-                    console.log(newDate.getFullYear(), newDate.getMonth(),newDate.getDay())
-                    dataFromServer = [
+                    dataFromServer.push(
                         {
                             key: response.data[idx]._id,
                             currency: response.data[idx].currency,
@@ -43,34 +52,13 @@ const App = () => {
                             date: new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDay()),
                             amount: response.data[idx].sum
                         }
-                    ]
+                    );
                 }
+                setPages(page);
                 setExpenses(dataFromServer);
-                console.log(dataFromServer)
             })
             .catch(httpErrorHandler);
     }
-
-
-    // key={expense.id}
-    // description={expense.description}
-    // category={expense.category}
-    // currency={expense.currency}
-    // amount={expense.amount}
-    // date={expense.date}
-
-    const DUMMY_EXPENSE = [
-    //     {
-    //     key: dataFromServer[0]._id,
-    //     currency: dataFromServer[0].currency,
-    //     description: dataFromServer[0].description,
-    //     category: dataFromServer[0].category,
-    //     date: dataFromServer[0].date,
-    //     amount: dataFromServer[0].sum
-    // }
-    ];
-
-    console.log(DUMMY_EXPENSE)
 
     const addExpenseHandler = (expense) => {
         setExpenses((prevExpenses) => {
@@ -79,14 +67,15 @@ const App = () => {
     };
 
     useEffect(()=> {
-        getData();
-    },[getData()]);
+        getData(pages);
+        console.log("use effect page from manage is : " ,pages);
+    },[]);
 
     //<Expenses items={expenses}></Expenses> Passing Data Down
     return (
         <div className="App">
             <NewExpense onAddExpense={addExpenseHandler} />
-            <Expenses items={expenses}></Expenses>
+            <Expenses items={expenses} totalPages={totalPages} dataPages={getData}></Expenses>
         </div>
     );
 };

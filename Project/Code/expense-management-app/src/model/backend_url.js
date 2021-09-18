@@ -6,7 +6,8 @@ const urls = {
     userSignUp: `${userManagement}/user/signup`,
     userSignOut: `${userManagement}/user/signout`,
     userInfo: `${userManagement}/user/info`,
-    expenseFetch: `${expenseManagement}/expense/fetch`
+    expenseFetch: `${expenseManagement}/expense/fetch`,
+    totalPages: `${expenseManagement}/expense/count`
 }
 
 export default urls;
