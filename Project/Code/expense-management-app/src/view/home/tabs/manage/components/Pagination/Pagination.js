@@ -63,7 +63,7 @@ export default function Pagination({movePages,data, RenderComponent, totalPage, 
                 <button
                     onClick={goToPreviousPage}
                     className={`prev ${currentPage === 1 ? 'disabled' : ''}`}>
-                    prev
+                    Prev
                 </button>
 
                 {/* show page numbers */}
@@ -80,7 +80,7 @@ export default function Pagination({movePages,data, RenderComponent, totalPage, 
                 <button
                     onClick={goToNextPage}
                     className={`next ${currentPage === pages ? 'disabled' : ''}`}>
-                    next
+                    Next
                 </button>
             </div>
         </div>
