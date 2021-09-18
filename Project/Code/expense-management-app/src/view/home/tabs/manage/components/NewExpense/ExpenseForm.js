@@ -3,6 +3,8 @@ import "./ExpenseForm.css";
 import "react-widgets/styles.css";
 import Combobox from "react-widgets/Combobox";
 import FormInput from "../../../../../components/forminput";
+import axios from "axios";
+import urls from "../../../../../../model/backend_url";
 
 const ExpenseForm = (props) => {
 
@@ -75,8 +77,8 @@ const ExpenseForm = (props) => {
       amount: +enteredAmount,
       date: new Date(enteredDate),
     };
-
     props.onSaveExpenseData(expenseData);
+
     //send data to the Parent
     setEnteredDescription("");
     setEnteredAmount("");

@@ -27,25 +27,19 @@ const App = () => {
 
     axios.post(urls.totalPages)
         .then(response => {
-            console.log("total : " , response.data);
             setTotalPages(response.data);
-
         })
         .catch(httpErrorHandler);
 
 
     function getData(page) {
-        console.log("Page from menage " , page);
-
         axios.post(urls.expenseFetch, {page: page, limit: limit})
             .then(response => {
-                console.log("Page from menage on Post" , page);
-
                 for (let idx=0 ; idx < response.data.length ;idx++) {
                     newDate = new Date(response.data[idx].date);
                     dataFromServer.push(
                         {
-                            key: response.data[idx]._id,
+                            userId: response.data[idx].userId,
                             currency: response.data[idx].currency,
                             description: response.data[idx].description,
                             category: response.data[idx].category,
@@ -56,11 +50,42 @@ const App = () => {
                 }
                 setPages(page);
                 setExpenses(dataFromServer);
+                console.log(dataFromServer)
             })
             .catch(httpErrorHandler);
     }
 
+
+
     const addExpenseHandler = (expense) => {
+        console.log(expense)
+        console.log(expenses)
+
+        // userId: req.userId,
+        // sum: req.body.sum,
+        // currency: req.body.currency,
+        // category: req.body.category,
+        // description: req.body.description,
+        // date: req.body.date
+
+        console.log(expense.currency);
+        console.log(expense.amount);
+
+        console.log(expenses[0].userId);
+
+        // axios.post(urls.addExpense, {userId: expenses[0].userId, sum: expense.amount,
+        //     currency: "gg",category: expense.category, description: expense.description,
+        //       date:  expense.date })
+        //     .then(response => {
+        //       console.log(response.data)
+        //     }).catch(httpErrorHandler);
+
+        axios.put(urls.addExpense)
+            .then(response => {
+              console.log(response.data)
+            }).catch(httpErrorHandler);
+
+
         setExpenses((prevExpenses) => {
             return [expense, ...prevExpenses];
         });
@@ -68,7 +93,6 @@ const App = () => {
 
     useEffect(()=> {
         getData(pages);
-        console.log("use effect page from manage is : " ,pages);
     },[]);
 
     //<Expenses items={expenses}></Expenses> Passing Data Down

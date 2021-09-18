@@ -8,7 +8,7 @@ const NewExpense = (props) => {
   const saveExpenseDataHandler = (enteredExpenseData) => {
     const expenseData = {
       ...enteredExpenseData,
-      id: Math.random().toString(),
+      //userId: enteredExpenseData._id,
     };
 
     //sending the data to the Parents we lift it 2 time from ExpenseForm - > NewExpense -> App

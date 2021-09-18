@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 const expense = require("../model/mongo/expense");
 
 /* ----------------------------- add an expense ----------------------------- */
-router.post('/', auth, (req, res) => {
+router.put('/', auth, (req, res) => {
     console.log('hii from addExpense');
     if (!req.body) { // if not empty
         res.status(400).send({ message: 'Content can not be empty!' });

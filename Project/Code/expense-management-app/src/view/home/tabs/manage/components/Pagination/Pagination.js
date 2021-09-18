@@ -14,7 +14,7 @@ export default function Pagination({movePages,data, RenderComponent, totalPage, 
 
     // console.log("data - " ,data.length)
     // console.log("Current Page - ",currentPage);
-     console.log("page Calc", Math.round(totalPage / dataLimit) +1);
+    // console.log("page Calc", Math.round(totalPage / dataLimit) +1);
     // console.log("I Change Page" ,pages , "Page sum is " , totalPage ," / " , dataLimit);
 
     function goToNextPage() {
