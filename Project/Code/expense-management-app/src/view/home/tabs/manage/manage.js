@@ -50,14 +50,11 @@ const App = () => {
                 }
                 setPages(page);
                 setExpenses(dataFromServer);
-                console.log(dataFromServer)
             })
             .catch(httpErrorHandler);
     }
 
-
     const addExpenseHandler = (expense) => {
-
         axios.post(urls.addExpense, {
             sum: expense.amount,
             currency: expense.currency,
@@ -66,7 +63,6 @@ const App = () => {
             date: expense.date
         })
             .then(response => {
-                console.log(response.data)
             }).catch(httpErrorHandler);
 
 
@@ -79,7 +75,6 @@ const App = () => {
         getData(pages);
     }, []);
 
-    //<Expenses items={expenses}></Expenses> Passing Data Down
     return (
         <div className="App">
             <NewExpense onAddExpense={addExpenseHandler}/>
@@ -87,5 +82,4 @@ const App = () => {
         </div>
     );
 };
-
 export default App;
