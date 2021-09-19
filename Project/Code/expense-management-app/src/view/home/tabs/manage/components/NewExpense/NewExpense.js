@@ -1,6 +1,7 @@
 import "./NewExpense.css";
+import "../../../profile/profile.css"
 import ExpenseForm from "./ExpenseForm";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const NewExpense = (props) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -27,7 +28,7 @@ const NewExpense = (props) => {
   return (
       <div className="new-expense">
         {!isEditing && (
-            <button className='new-expense__btn' onClick={startEditingHandler}>Add New Expense</button>
+            <button className="submit-button" id="profile-addnew" onClick={startEditingHandler}>Add New Expense</button>
         )}
         {isEditing && (
             <ExpenseForm

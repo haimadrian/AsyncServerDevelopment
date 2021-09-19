@@ -59,8 +59,10 @@ const App = () => {
     const addExpenseHandler = (expense) => {
 
         axios.post(urls.addExpense, {
-            userId: expenses[0].userId, sum: expense.amount,
-            currency: expense.currency, category: expense.category, description: expense.description,
+            sum: expense.amount,
+            currency: expense.currency,
+            category: expense.category,
+            description: expense.description,
             date: expense.date
         })
             .then(response => {
