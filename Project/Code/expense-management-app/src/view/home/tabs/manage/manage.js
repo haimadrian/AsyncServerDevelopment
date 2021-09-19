@@ -1,4 +1,4 @@
-import React, {useCallback, useState,useEffect} from "react";
+import React, {useCallback, useState, useEffect} from "react";
 import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
 import axios from "axios";
@@ -12,8 +12,8 @@ const App = () => {
     let limit = 10;
     let newDate = 0
     const [expenses, setExpenses] = useState([]);
-    const [pages, setPages ] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
+    const [pages, setPages] = useState(0);
+    const [totalDataCount, setTotalDataCount] = useState(0);
 
     const httpErrorHandler = useCallback(async (error) => {
         let errorMessage = error.response?.data?.message;
@@ -25,9 +25,9 @@ const App = () => {
     }, []);
 
 
-    axios.post(urls.totalPages)
+    axios.post(urls.totalDataCount)
         .then(response => {
-            setTotalPages(response.data);
+            setTotalDataCount(response.data);
         })
         .catch(httpErrorHandler);
 
@@ -35,7 +35,7 @@ const App = () => {
     function getData(page) {
         axios.post(urls.expenseFetch, {page: page, limit: limit})
             .then(response => {
-                for (let idx=0 ; idx < response.data.length ;idx++) {
+                for (let idx = 0; idx < response.data.length; idx++) {
                     newDate = new Date(response.data[idx].date);
                     dataFromServer.push(
                         {
@@ -56,33 +56,15 @@ const App = () => {
     }
 
 
-
     const addExpenseHandler = (expense) => {
-        console.log(expense)
-        console.log(expenses)
 
-        // userId: req.userId,
-        // sum: req.body.sum,
-        // currency: req.body.currency,
-        // category: req.body.category,
-        // description: req.body.description,
-        // date: req.body.date
-
-        console.log(expense.currency);
-        console.log(expense.amount);
-
-        console.log(expenses[0].userId);
-
-        // axios.post(urls.addExpense, {userId: expenses[0].userId, sum: expense.amount,
-        //     currency: "gg",category: expense.category, description: expense.description,
-        //       date:  expense.date })
-        //     .then(response => {
-        //       console.log(response.data)
-        //     }).catch(httpErrorHandler);
-
-        axios.put(urls.addExpense)
+        axios.post(urls.addExpense, {
+            userId: expenses[0].userId, sum: expense.amount,
+            currency: expense.currency, category: expense.category, description: expense.description,
+            date: expense.date
+        })
             .then(response => {
-              console.log(response.data)
+                console.log(response.data)
             }).catch(httpErrorHandler);
 
 
@@ -91,15 +73,15 @@ const App = () => {
         });
     };
 
-    useEffect(()=> {
+    useEffect(() => {
         getData(pages);
-    },[]);
+    }, []);
 
     //<Expenses items={expenses}></Expenses> Passing Data Down
     return (
         <div className="App">
-            <NewExpense onAddExpense={addExpenseHandler} />
-            <Expenses items={expenses} totalPages={totalPages} dataPages={getData}></Expenses>
+            <NewExpense onAddExpense={addExpenseHandler}/>
+            <Expenses items={expenses} totalData={totalDataCount} dataPages={getData}></Expenses>
         </div>
     );
 };

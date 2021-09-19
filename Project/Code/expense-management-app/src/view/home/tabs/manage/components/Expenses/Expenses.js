@@ -34,7 +34,7 @@ const Expenses = (props) => {
           <Pagination
                 data={filteredExpenses}
                 RenderComponent={ExpensesList}
-                totalPage={props.totalPages}
+                totalData={props.totalData}
                 dataLimit={10}
                 movePages={movePage}
             />

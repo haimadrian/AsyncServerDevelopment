@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import "./ExpenseForm.css";
 import "react-widgets/styles.css";
 import Combobox from "react-widgets/Combobox";
-import FormInput from "../../../../../components/forminput";
-import axios from "axios";
-import urls from "../../../../../../model/backend_url";
 
 const ExpenseForm = (props) => {
 
@@ -59,6 +56,8 @@ const ExpenseForm = (props) => {
   const currencyChangeHandler = (value) => {
     let symbol = '';
     for(const [keys , values] of Object.entries(currency)){
+      console.log(value);
+      console.log(keys);
       if (keys === value ){
         symbol = values;
         console.log(values);
@@ -91,7 +90,7 @@ const ExpenseForm = (props) => {
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState(getNowDate());
   const [enteredCategory, setEnteredCategory] = useState(expenseCategoryList[0]);
-  const [enteredCurrency, setEnteredCurrency] = useState(Object.keys(currency)[0]);
+  const [enteredCurrency, setEnteredCurrency] = useState('($ US)');
 
   //<input type="text" value={enteredTitle} onChange={titleChangeHandler} />  is Two-Way Binding
   return (
@@ -117,7 +116,8 @@ const ExpenseForm = (props) => {
           </div>
           <div className='combobox-inputs-currency'>
             <label>Currency</label>
-            <FormInput type='DropdownList' defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>
+            {/*<FormInput type='DropdownList' defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>*/}
+            <Combobox defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} data={Object.keys(currency)}/>
           </div>
           <div className="combobox-inputs">
             <label>Category</label>

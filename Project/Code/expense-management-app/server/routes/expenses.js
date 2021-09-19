@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 const expense = require("../model/mongo/expense");
 
 /* ----------------------------- add an expense ----------------------------- */
-router.put('/', auth, (req, res) => {
+router.post('/', auth, (req, res) => {
     console.log('hii from addExpense');
     if (!req.body) { // if not empty
         res.status(400).send({ message: 'Content can not be empty!' });
@@ -21,17 +21,16 @@ router.put('/', auth, (req, res) => {
         });
 
         // save expense in the database
-        expense
+        newExpense
             .save(newExpense)
-            .exec()
             .then(data => res.send(data))
             .catch(err => res.status(500)
                 .send({ message: err.message || 'error occurred while save expense' }));
     }
 });
-/* ----------------------------- get expense ------------------------- */
+/* -------------------------- get number of expense ------------------------- */
 router.post('/fetch', auth, (req, res) => {
-    // const ITEMS_PER_WINDOW = 10; //expense.countDocuments({ userId: req.userId });
+    // const ITEMS_PER_WINDOW = 10; 
     //const PAGE_DEFAULT = 0;
     // {"page":0 , "limit": 10}
     const page = req.body.page || 0;

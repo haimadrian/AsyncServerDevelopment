@@ -2,30 +2,35 @@ import React, {useEffect, useState} from 'react';
 import './Pagination.css';
 import logo from "../../../../../components/logo";
 
-export default function Pagination({movePages,data, RenderComponent, totalPage, dataLimit }) {
+export default function Pagination({movePages,data, RenderComponent, totalData, dataLimit }) {
     //const [pages,setPages] = useState(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState(1);
 
-    let pages = Math.round(totalPage / dataLimit);
+    let pages = parseInt(totalData / dataLimit);
+    //console.log("after round " , pages)
 
-    if (pages % 10 != 0) {
+    if (totalData % 10 != 0) {
         pages = pages + 1;
     }
+    if (totalData === 0){
+        pages = 1;
+    }
+
 
     // console.log("data - " ,data.length)
     // console.log("Current Page - ",currentPage);
-    // console.log("page Calc", Math.round(totalPage / dataLimit) +1);
-    // console.log("I Change Page" ,pages , "Page sum is " , totalPage ," / " , dataLimit);
+    // console.log("page Calc", Math.round(totalData / dataLimit) +1);
+    //console.log("I Change Page" ,pages , "Page sum is " , totalData ," / " , dataLimit);
 
     function goToNextPage() {
-        console.log("Move Page",movePages)
+        //console.log("Move Page",movePages)
         setCurrentPage((page) => page + 1);
         movePages(currentPage);
     }
 
     function goToPreviousPage() {
         setCurrentPage((page) => page - 1);
-        console.log("prev page", currentPage)
+        //console.log("prev page", currentPage)
         movePages(currentPage-2);
     }
 
@@ -40,8 +45,12 @@ export default function Pagination({movePages,data, RenderComponent, totalPage, 
     };
 
     const getPaginationGroup = () => {
-         let start = Math.floor((currentPage - 1) / totalPage) * totalPage;
+        let start = 0;
+        if (totalData != 0){
+             start = Math.floor((currentPage - 1) / totalData) * totalData;
+        }
         // const arr = new Array(pageLimit).fill().map((_, idx) => start + idx + 1)
+        //console.log("start is : " , start )
         const arr = new Array(pages).fill().map((_, idx) => start + idx + 1)
         return arr;
     };
