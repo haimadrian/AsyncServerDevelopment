@@ -29,9 +29,9 @@ const ExpenseForm = (props) => {
     const currency = {
         USD: '($ US)',
         AUD: '($ AUC)',
-        CAD: '($ AUC)',
+        CAD: '($ CAD)',
         EUR: '€',
-        GBP: '¥',
+        GBP: '£',
         ILS: '₪',
         JPY: '¥'
     }
@@ -46,21 +46,17 @@ const ExpenseForm = (props) => {
 
     const dateChangeHandler = (event) => {
         setEnteredDate(event.target.value);
-        console.log(enteredDate)
     };
 
     const categoryChangeHandler = (value) => {
-        setEnteredCategory(value);
+        setEnteredCategory(value.target.value);
     };
 
     const currencyChangeHandler = (value) => {
         let symbol = '';
         for (const [keys, values] of Object.entries(currency)) {
-            console.log(value);
-            console.log(keys);
-            if (keys === value) {
+            if (keys === value.target.value) {
                 symbol = values;
-                console.log(values);
             }
         }
         setEnteredCurrency(symbol);
@@ -92,52 +88,6 @@ const ExpenseForm = (props) => {
     const [enteredCategory, setEnteredCategory] = useState(expenseCategoryList[0]);
     const [enteredCurrency, setEnteredCurrency] = useState('($ US)');
 
-    //<input type="text" value={enteredTitle} onChange={titleChangeHandler} />  is Two-Way Binding
-
-    // <div className="new-expense__control">
-    //   <label>Description</label>
-    //   <input
-    //       type="text"
-    //       value={enteredDescription}
-    //       onChange={descriptionChangeHandler}
-    //   />
-    // </div>
-    // <div className="new-expense__control">
-    //     <label>Amount</label>
-    //     <input
-    //         type="number"
-    //         min="0.01"
-    //         step="0.01"
-    //         value={enteredAmount}
-    //         onChange={amountChangeHandler}
-    //     />
-    // </div>
-
-
-    // <div className='combobox-inputs-currency'>
-    //     <label>Currency</label>
-    //     {/*<FormInput type='DropdownList' defaultValue={Object.keys(currency)[0]} onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>*/}
-    //     <Combobox className='combobox-inputs-currency' defaultValue={Object.keys(currency)[0]}
-    //               onChange={value => currencyChangeHandler(value)} data={Object.keys(currency)}/>
-    // </div>
-    // <div className="combobox-inputs">
-    //     <label>Category</label>
-    //     <Combobox defaultValue={expenseCategoryList[0]}
-    //               onChange={value => categoryChangeHandler(value)}
-    //               data={expenseCategoryList}/>
-    // </div>
-    // <div className="new-expense__control">
-    //     <label>Date</label>
-    //     <input
-    //         type="date"
-    //         min="2019-01-01"
-    //         max="2022-12-31"
-    //         value={enteredDate === '' ? getNowDate() : enteredDate}
-    //         onChange={dateChangeHandler}
-    //     />
-    // </div>
-
-
     return (
         <div className='frame-profile'>
             <form onSubmit={submitHandler}>
@@ -168,10 +118,10 @@ const ExpenseForm = (props) => {
 
                     </div>
                     <div className='card-vertical'>
-                        <FormInput type='DropdownList' title='Currency' value={Object.keys(currency)[0]}
+                        <FormInput type='DropdownList' title='Currency' placeholder={Object.keys(currency)[0]}
                                    onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>
 
-                        <FormInput type='DropdownList' title='Category' value={expenseCategoryList[0]}
+                        <FormInput type='DropdownList' title='Category' placeholder={expenseCategoryList[0]}
                                    onChange={value => categoryChangeHandler(value)} values={expenseCategoryList}/>
 
                     </div>
