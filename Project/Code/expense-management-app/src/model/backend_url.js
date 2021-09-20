@@ -5,7 +5,11 @@ const expenseStatistics = 'http://localhost:3002';
 const urls = {
     userSignUp: `${userManagement}/user/signup`,
     userSignOut: `${userManagement}/user/signout`,
-    userInfo: `${userManagement}/user/info`
+    userInfo: `${userManagement}/user/info`,
+    expenseFetch: `${expenseManagement}/expense/fetch`,
+    totalDataCount: `${expenseManagement}/expense/count`,
+    addExpense: `${expenseManagement}/expense`
+
 }
 
 export default urls;

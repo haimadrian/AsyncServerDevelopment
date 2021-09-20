@@ -99,6 +99,22 @@ where their content displayed next to them (right) */
     min-width: 13rem;
 }
 
+#profile-cancel {
+    margin-right: 7rem;
+    margin-left: auto;
+    width: 30%;
+    float: bottom;
+    min-width: 13rem;
+}
+
+#profile-addnew {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 1rem;
+    width: 40%;
+    min-width: 15rem;
+}
+
 #profile-reset {
     color: #2374E5;
     margin: auto 1rem 0.5rem auto;
