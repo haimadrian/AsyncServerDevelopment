@@ -35,7 +35,7 @@ class Currency {
 
     keyFromDisplayValue(displayValue) {
         let key = displayValue.split(" ")[1];
-        return key.substring(1, key.length);
+        return key.substring(1, key.length-1);
     }
 }
 

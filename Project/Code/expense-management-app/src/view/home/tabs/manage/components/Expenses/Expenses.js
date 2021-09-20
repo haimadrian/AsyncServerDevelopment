@@ -18,7 +18,6 @@ const Expenses = (props) => {
   });
 
   const movePage = (page) =>{
-    console.log("page from Expenses" , page);
     return props.dataPages(page);
   }
 

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import "../../../profile/profile.css"
 import FormInput from "../../../../../components/forminput";
+import currencies from "../../../../../../model/currency";
 
 
 const ExpenseForm = (props) => {
@@ -10,7 +11,7 @@ const ExpenseForm = (props) => {
         let dd = String(today.getDate()).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = today.getFullYear();
-        return today = yyyy + '-' + mm + '-' + dd;
+        return yyyy + '-' + mm + '-' + dd;
     }
 
     const expenseCategoryList = [
@@ -26,15 +27,6 @@ const ExpenseForm = (props) => {
         'SUPERMARKET'
     ];
 
-    const currency = {
-        USD: '($ US)',
-        AUD: '($ AUC)',
-        CAD: '($ CAD)',
-        EUR: '€',
-        GBP: '£',
-        ILS: '₪',
-        JPY: '¥'
-    }
 
     const descriptionChangeHandler = (event) => {
         setEnteredDescription(event.target.value);
@@ -52,13 +44,11 @@ const ExpenseForm = (props) => {
         setEnteredCategory(value.target.value);
     };
 
-    const currencyChangeHandler = (value) => {
-        let symbol = '';
-        for (const [keys, values] of Object.entries(currency)) {
-            if (keys === value.target.value) {
-                symbol = values;
-            }
-        }
+    const currencyChangeHandler = (event) => {
+        let symbol = currencies[currencies.keyFromDisplayValue(event.target.value)];
+        console.log(symbol);
+        console.log(event.target.value);
+        console.log(currencies.keyFromDisplayValue(event.target.value))
         setEnteredCurrency(symbol);
     };
 
@@ -86,7 +76,7 @@ const ExpenseForm = (props) => {
     const [enteredAmount, setEnteredAmount] = useState("");
     const [enteredDate, setEnteredDate] = useState(getNowDate());
     const [enteredCategory, setEnteredCategory] = useState(expenseCategoryList[0]);
-    const [enteredCurrency, setEnteredCurrency] = useState('($ US)');
+    const [enteredCurrency, setEnteredCurrency] = useState(currencies.displayValues()[6]);
 
     return (
         <div className='frame-profile'>
@@ -118,10 +108,10 @@ const ExpenseForm = (props) => {
 
                     </div>
                     <div className='card-vertical'>
-                        <FormInput type='DropdownList' title='Currency' placeholder={Object.keys(currency)[0]}
-                                   onChange={value => currencyChangeHandler(value)} values={Object.keys(currency)}/>
+                        <FormInput type='DropdownList' title='Currency' value={enteredCurrency}
+                                   onChange={value => currencyChangeHandler(value)} values={currencies.displayValues()}/>
 
-                        <FormInput type='DropdownList' title='Category' placeholder={expenseCategoryList[0]}
+                        <FormInput type='DropdownList' title='Category' value={enteredCategory}
                                    onChange={value => categoryChangeHandler(value)} values={expenseCategoryList}/>
 
                     </div>
