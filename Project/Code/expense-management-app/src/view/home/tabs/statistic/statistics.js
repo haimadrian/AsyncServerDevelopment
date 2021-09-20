@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../profile/profile.css"
+import "../profile/profile.css"
 
 
 export default function Statistics() {
