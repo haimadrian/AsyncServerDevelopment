@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+.frame-profile {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.frame-profile form {
+    position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem;
+    margin: 1rem;
+    background-color: white;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+.horiz {
+    display: flex;
+    width: 100%;
+    clear: both;
+    box-sizing: border-box;
+}
+
+.card-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: white;
+    border-style: double;
+    border-color: rgba(61, 90, 128, 0.7);
+    border-radius: 25px;
+    box-sizing: border-box;
+}
+
+/* Responsive UI. When the screen width below 620px (for mobile),
+we use horizontal tabs where their content below them */
+@media (max-width: 620px ) {
+    .horiz {
+        flex-flow: column;
+        align-items: center;
+    }
+
+    .card-vertical {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .body {
+        overflow: hidden; /* Hide scrollbars */
+    }
+
+    #profile-submit {
+        margin-right: auto;
+    }
+}
+
+/* Responsive UI. When screen width above 620 pixels (PC), use vertical tabs
+where their content displayed next to them (right) */
+@media (min-width: 620px ) {
+    .horiz {
+        flex-flow: row;
+        align-items: flex-start;
+    }
+
+    .card-vertical {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    #profile-submit {
+        margin-right: -3rem;
+    }
+}
+
+.row {
+    font-size: 0.8rem;
+}
+
+.row input {
+     font-size: 0.9rem;
+ }
+
+#labelDrawable {
+    font-size: 1.3rem;
+}
+
+#profile-submit {
+    margin-left: auto;
+    width: 30%;
+    float: bottom;
+    min-width: 13rem;
+}
+
+#profile-cancel {
+    margin-right: 7rem;
+    margin-left: auto;
+    width: 30%;
+    float: bottom;
+    min-width: 13rem;
+}
+
+#profile-addnew {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 1rem;
+    width: 40%;
+    min-width: 15rem;
+}
+
+#profile-reset {
+    color: #2374E5;
+    margin: auto 1rem 0.5rem auto;
+    float: bottom;
+    font-size: 1.1rem;
+}
+
+#profile-reset:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
