@@ -6,10 +6,10 @@ const expense = require("../model/mongo/expense");
 
 /* ----------------------------- add an expense ----------------------------- */
 router.post('/', auth, (req, res) => {
-    console.log('hii from addExpense');
     if (!req.body) { // if not empty
         res.status(400).send({ message: 'Content can not be empty!' });
     } else {
+
         // new expense
         const newExpense = new expense({
             userId: req.userId,
@@ -30,8 +30,6 @@ router.post('/', auth, (req, res) => {
 });
 /* -------------------------- get number of expense ------------------------- */
 router.post('/fetch', auth, (req, res) => {
-    // const ITEMS_PER_WINDOW = 10; 
-    //const PAGE_DEFAULT = 0;
     // {"page":0 , "limit": 10}
     const page = req.body.page || 0;
     const limit = req.body.limit;
@@ -57,11 +55,8 @@ router.post('/fetch', auth, (req, res) => {
 
 /* ------------------------- get Expense by Category ------------------------ */
 router.get('/fetch/category/:category', auth, (req, res) => {
-    console.log('hii from getExpenseByCategory');
 
     const category = req.params.category;
-
-    console.log('category: ', category);
 
     expense.find({ userId: req.userId, category: category }, { _id: 0, __v: 0 })
         .exec()
@@ -73,7 +68,6 @@ router.get('/fetch/category/:category', auth, (req, res) => {
 
 /* -------------------------- get page counts total -------------------------- */
 router.post('/count', auth, (req, res) => {
-    console.log('hii from get page number');
 
     expense.countDocuments({ userId: req.userId })
         .then(num_of_pages => res.status(200).json(num_of_pages))
