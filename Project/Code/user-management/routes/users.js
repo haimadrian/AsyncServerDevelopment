@@ -75,9 +75,9 @@ router.post('/signout', auth, function (req, res) {
 // GET user by id.
 // userId is accessible through req.params.userId
 router.get('/info', auth, function (req, res) {
-    user.findOne({firebaseUserId: req.userId})
+    user.findOne({firebaseUserId: req.userId}, {_id: 0, __v: 0})
         .exec()
-        .then(user => res.status(200).json(userUtil.toPublicUser(user)))
+        .then(user => res.status(200).json(user))
         .catch(() => res.status(404).json({message: 'NOT FOUND'}));
 });
 
