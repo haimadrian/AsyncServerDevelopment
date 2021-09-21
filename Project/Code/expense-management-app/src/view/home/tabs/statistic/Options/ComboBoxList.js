@@ -7,33 +7,24 @@ const FilterDates = () => {
 
     const [selectReport,setSelectReport] = useState('Daily');
     const [days,setDays] = useState(1);
-    const [weekly,setWeekly] = useState('Week 1');
     const [months,setMonths] = useState(1);
     const [years,setYears] = useState(2015);
     function dateList(start, end) {
-        return Array(end - start + 1).fill().map((_, idx) => start + idx)
+        return Array(end - start + 1).fill().map((_, idx) => start + idx);
     }
-
 
 
     function selection() {
-        const selectOption = ["Daily","Weekly", "Months" ,"Years" ];
+        const selectOption = ["Daily", "Months"];
         return selectOption;
     }
 
-    function selectionWeekly() {
-        const selectWeekly = ["Week 1","Week 2", "Week 3" ,"Week 4" ];
-        return selectWeekly;
-    }
 
     console.log(selectReport);
 
     //onChange={value => currencyChangeHandler(value)}
     const daysChangeHandler = (event) => {
         setDays(event.target.value);
-    }
-    const weeklyChangeHandler = (event) => {
-        setWeekly(event.target.value);
     }
     const monthsChangeHandler = (event) => {
         setMonths(event.target.value);
@@ -53,7 +44,7 @@ const FilterDates = () => {
         <div className='expenses-filter'>
             <div className='expenses-filter__control'>
                 <label>Report: </label>
-                <select onChange={selectReportChangeHandler}>
+                <select className='report' onChange={selectReportChangeHandler}>
                     {selection().map((select) => (
                         <Options dateOption={select} />
                     ))}
@@ -65,13 +56,6 @@ const FilterDates = () => {
                         <Options dateOption={years}/>
                     ))}
                 </select>
-                <label>Weekly: </label>
-                <select className={`report ${selectReport != 'Daily' && selectReport != 'Weekly' ? 'disabled' : ''}`}
-                        onChange={weeklyChangeHandler}>
-                    {selectionWeekly().map((select) => (
-                        <Options dateOption={select}/>
-                    ))}
-                </select>
                 <label>Months: </label>
                 <select className={`report ${selectReport != 'Months' && selectReport != 'Daily'
                 && selectReport != 'Weekly'  ? 'disabled' : ''}`}
@@ -81,7 +65,7 @@ const FilterDates = () => {
                     ))}
                 </select>
                 <label>Years: </label>
-                <select onChange={yearsChangeHandler}>
+                <select className='report' onChange={yearsChangeHandler}>
                     {dateList(2015, 2025).map((years) => (
                         <Options dateOption={years}/>
                     ))}

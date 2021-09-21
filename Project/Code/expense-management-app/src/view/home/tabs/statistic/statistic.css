@@ -12,7 +12,12 @@
     font-size: 2rem;
     text-align: left;
     margin-left: 1rem;
-    width: 30%;
+    width: 15%;
+}
+
+.expenses-filter-label {
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 #form {
@@ -31,11 +36,17 @@
 
 .expenses-statistic{
     padding: 1rem;
-    background-color: rgb(31,31,31);
+    background-color: #98C1D9;
     margin: 2rem auto;
     width: 85%;
     max-width: 95%;
 
+}
+
+.expenses-filter-control {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 5rem;
 }
 
 #filterCB{

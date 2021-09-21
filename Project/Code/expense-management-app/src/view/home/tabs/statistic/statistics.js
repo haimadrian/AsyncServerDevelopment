@@ -16,13 +16,10 @@ export default function statistic() {
                     <div id='title'>Statistics
                     </div>
                 </div>
-                <div className='horiz'>
-                </div>
-                <div className='horiz'>
                     <div className='card-vertical'>
                         <Card className="expenses-statistic">
                             <div className='expenses-filter'>
-                                <div className='expenses-filter__control'>
+                                <div className='expenses-filter-control'>
                                     <div id='filter'>Please Select : </div>
                                     <FilterDates/>
                                 </div>
@@ -30,7 +27,6 @@ export default function statistic() {
                         </Card>
                         <PieChartStatistics/>
                     </div>
-                </div>
             </div>
         </div>
 
