@@ -3,8 +3,17 @@
     margin-left: 3rem ;
     font-size: 3rem;
     margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight:bold;
 }
 
+#filter {
+    color: white;
+    font-size: 2rem;
+    text-align: left;
+    margin-left: 1rem;
+    width: 30%;
+}
 
 #form {
     position: center;
@@ -18,5 +27,15 @@
     border-radius: 25px;
     font-size: 0.8rem;
     box-sizing: border-box;
+}
+
+.card{
+    border-radius: 12px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    width: 90%;
+}
+
+#filterCB{
+    width: 30%;
 }
 

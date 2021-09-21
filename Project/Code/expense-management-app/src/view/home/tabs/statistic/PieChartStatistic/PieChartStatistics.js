@@ -49,10 +49,10 @@ const PieChartStatistics = () =>{
     };
 
     return(
-        <PieChart width={750} height={400}>
+        <PieChart width={800} height={400}>
             <Pie
                 data={data}
-                cx={320}
+                cx={400}
                 cy={200}
                 fill="#8884d8"
                 dataKey="value"
