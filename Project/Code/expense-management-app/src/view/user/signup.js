@@ -60,7 +60,7 @@ export default function SignUp(props) {
                     Sign Up
                 </button>
             </form>
-            {isThinking ? <i className="fa fa-spinner fa-pulse fa-3x fa-fw"/> : null}
+            {isThinking ? <i id="loading" className="fa fa-spinner fa-pulse fa-3x fa-fw"/> : null}
             <label id='labelError'>{errorMessage}</label>
             <div id="alternativeLogin">
                 <label>Already have an account?</label>
