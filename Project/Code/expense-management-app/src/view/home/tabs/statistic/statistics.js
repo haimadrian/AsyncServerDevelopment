@@ -20,7 +20,7 @@ export default function statistic() {
                 </div>
                 <div className='horiz'>
                     <div className='card-vertical'>
-                        <Card className="expenses">
+                        <Card className="expenses-statistic">
                             <div className='expenses-filter'>
                                 <div className='expenses-filter__control'>
                                     <div id='filter'>Please Select : </div>
