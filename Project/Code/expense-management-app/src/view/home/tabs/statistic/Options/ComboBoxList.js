@@ -11,9 +11,11 @@ const FilterDates = () => {
 
     const selectOption = ["Daily","Weekly", "Months" ,"Years" ];
 
-    function selection(selectOption) {
-        return Array(4).map(( element) => element +1)
+    function selection() {
+        return selectOption;
     }
+
+    console.log(selection())
 
     //onChange={value => currencyChangeHandler(value)}
 
@@ -25,20 +27,21 @@ const FilterDates = () => {
         <div className='expenses-filter'>
             <div className='expenses-filter__control'>
                 <select onChange={yearsChangeHandler}>
-                    {yearsList(2015, 2025).map((years) => (
-                        <Options dateOption={years} val={"2001"}/>
+                    {selection().map((select) => (
+                        <Options dateOption={select} />
                     ))}
                 </select>
                 <select onChange={yearsChangeHandler}>
                     {yearsList(2015, 2025).map((years) => (
-                        <Options dateOption={years} val={"2001"}/>
+                        <Options dateOption={years}/>
                     ))}
                 </select>
                 <select onChange={yearsChangeHandler}>
-                    {selection(selectOption).map((years) => (
-                        <Options dateOption={years} val={"2001"}/>
+                    {yearsList(2015, 2025).map((years) => (
+                        <Options dateOption={years}/>
                     ))}
                 </select>
+
             </div>
         </div>
     );
