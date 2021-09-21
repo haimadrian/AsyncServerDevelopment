@@ -10,10 +10,15 @@ const monthlyExpenses = mongoose.model('monthlyexpenses', statistics);
 //const weeklyExpenses = mongoose.model('weeklyexpenses', statistics);
 //const yearlyExpenses = mongoose.model('yearlyexpenses', statistics);
 
-router.post('/fetch', auth, (req, res) => {
+// router.post('/fetch', auth, (req, res) => {
+router.get('/fetch/year/:year/:month?', auth, (req, res) => {
 
-    const year = req.body.year;
-    const month = req.body.month;
+    // http://localhost:3002/statistics/fetch/year/2021/  || http://localhost:3002/statistics/fetch/year/2021/10
+
+    /* const year = req.body.year;
+    const month = req.body.month; */
+    const year = req.params.year;
+    const month = req.params.month;
 
     console.log(`year: ${year}, month: ${month}`);
 
