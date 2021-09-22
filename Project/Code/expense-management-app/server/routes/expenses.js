@@ -10,7 +10,6 @@ router.post('/', auth, (req, res) => {
     if (!req.body) { // if not empty
         res.status(400).send({message: 'Content can not be empty!'});
     } else {
-
         // new expense
         const newExpense = new expense({
             userId: req.userId,
