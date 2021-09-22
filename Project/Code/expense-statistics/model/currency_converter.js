@@ -14,22 +14,38 @@ const currencies = require("./currency");
  */
 class CurrencyConverter {
     #rates
+    #lastRefreshTime
 
     /**
      * Constructs a new {@link CurrencyConverter}
      */
     constructor() {
         this.#rates = {};
+        this.#lastRefreshTime = 0;
     }
 
     /**
      * Reload rates data from https://www.boi.org.il/currency.xml
      * @return {Promise}
      */
-    refresh() {
-        console.log('Refreshing currency rates. Time:', new Date(Date.now()));
-        return this.#loadXml()
-            .then(() => console.log('Refresh complete. Time:', new Date(Date.now())));
+    async refresh() {
+        let now = Date.now();
+
+        const oneDayMillis = 24 * 60 * 60 * 1000;
+        if (now - this.#lastRefreshTime >= oneDayMillis) {
+            this.#lastRefreshTime = now;
+
+            console.log('Refreshing currency rates. Time:', new Date(now));
+
+            try {
+                await this.#loadXml();
+            } catch (error) {
+                console.error(error);
+                return error;
+            } finally {
+                console.log('Refresh complete. Time:', new Date(Date.now()));
+            }
+        }
     }
 
     /**
@@ -45,13 +61,12 @@ class CurrencyConverter {
     /**
      * Load XML data from https://www.boi.org.il/currency.xml and then use
      * {@link #parseDoc} to parse and store the rates.
-     * @param {Function} onComplete Optional complete listener
      * @return {Promise}
      */
-    #loadXml(onComplete = null) {
-        return axios.get('https://www.boi.org.il/currency.xml')
-            .then(response => xml2js.parseStringPromise(response.data))
-            .then(result => this.#parseDoc(result));
+    async #loadXml() {
+        let response = await axios.get('https://www.boi.org.il/currency.xml');
+        let currenciesJsFromXml = await xml2js.parseStringPromise(response.data);
+        this.#parseDoc(currenciesJsFromXml);
     }
 
     /**

@@ -61,64 +61,55 @@ function collectChanges(existingUser, newUser) {
     return changes;
 }
 
-router.put('/signup', auth, function (req, res) {
+router.put('/signup', auth, (req, res) => {
     user.create({firebaseUserId: req.userId, email: req.userEmail, version: 1})
         .then(user => res.status(200).json(userUtil.toPublicUser(user)))
         .catch((error) => res.status(500).json({message: error}));
 });
 
-router.post('/signout', auth, function (req, res) {
+router.post('/signout', auth, (req, res) => {
     userAuthCache.remove(req.jwt);
     res.status(200).json({message: 'Signed Out'});
 });
 
 // GET user by id.
 // userId is accessible through req.params.userId
-router.get('/info', auth, function (req, res) {
+router.get('/info', auth, (req, res) => {
     user.findOne({firebaseUserId: req.userId}, {_id: 0, __v: 0})
         .exec()
         .then(user => res.status(200).json(user))
         .catch(() => res.status(404).json({message: 'NOT FOUND'}));
 });
 
-router.post('/info', auth, function (req, res) {
-    validateUserInfoReq(req)
-        .then(() => {
-            return user.findOne({firebaseUserId: req.userId}).exec();
-        })
-        .then(user => {
-            let update = userUtil.toPrivateUser(req.body, req.userId, user.version);
-            let changes = collectChanges(user, update);
+router.post('/info', auth, async (req, res) => {
+    try {
+        await validateUserInfoReq(req);
 
-            // Update only if there is a difference
-            if (changes.length > 0) {
-                let userChangesEntity = {
-                    firebaseUserId: req.userId,
-                    changes: changes,
-                    version: user.version,
-                    updateDate: new Date()
-                }
+        let user = await user.findOne({firebaseUserId: req.userId}).exec();
 
-                return userChanges.create(userChangesEntity);
-            } else {
-                // Break promise chain
-                throw new Error('Nothing to update');
+        let update = userUtil.toPrivateUser(req.body, req.userId, user.version);
+        let changes = collectChanges(user, update);
+
+        // Update only if there is a difference
+        if (changes.length === 0) {
+            res.status(200).json({message: 'Nothing to update'});
+        } else {
+            let userChangesEntity = {
+                firebaseUserId: req.userId,
+                changes: changes,
+                version: user.version,
+                updateDate: new Date()
             }
-        })
-        .then(updatedUserChange => {
+
+            let updatedUserChange = await userChanges.create(userChangesEntity);
             let update = userUtil.toPrivateUser(req.body, req.userId, updatedUserChange.version + 1);
-            return user.updateOne({firebaseUserId: req.userId}, update).exec();
-        })
-        .then(updatedUser => res.status(200).json(userUtil.toPublicUser(updatedUser)))
-        .catch((error) => {
-            let statusCode = 400;
 
-            if (error.message === 'Nothing to update') {
-                statusCode = 200;
-            }
-
-            res.status(statusCode).json({message: error.message});
-        });
+            let updatedUser = await user.updateOne({firebaseUserId: req.userId}, update).exec();
+            res.status(200).json(userUtil.toPublicUser(updatedUser));
+        }
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
 });
 
 module.exports = router;
