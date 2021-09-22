@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/user', usersRouter);
-app.use('/auth', authorizationRouter);
+app.use('/api/user', usersRouter);
+app.use('/api/auth', authorizationRouter);
 
 module.exports = app;

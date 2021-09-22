@@ -13,7 +13,7 @@ const authorizeRequest = (req, res, next) => {
         }
     };
 
-    return axios.get(`${process.env.APP_SERVER_USER_URL}/auth`, config)
+    return axios.get(`${process.env.APP_SERVER_USER_URL}/api/auth`, config)
         .then(response => {
             req.userId = response.data.userId;
             req.userEmail = response.data.userEmail;

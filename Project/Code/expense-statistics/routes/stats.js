@@ -34,13 +34,13 @@ function handleFetchRange(req, res, collection, year, month = undefined) {
         .catch(error => res.status(500).json({message: error.message}));
 }
 
-router.get('/fetch/year/:year', auth, (req, res) => {
+router.get('/year/:year', auth, (req, res) => {
     const year = req.params.year;
     console.log(`year: ${year}`);
     handleFetchRange(req, res, monthlyExpenses, year);
 });
 
-router.get('/fetch/year/:year/month/:month', auth, (req, res) => {
+router.get('/year/:year/month/:month', auth, (req, res) => {
     const year = parseInt(req.params.year);
     const month = parseInt(req.params.month);
     console.log('year:', year, 'month:', month);
