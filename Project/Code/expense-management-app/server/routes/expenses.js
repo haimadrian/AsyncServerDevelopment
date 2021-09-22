@@ -8,7 +8,7 @@ const expense = require("../model/mongo/expense");
 /* ----------------------------- add an expense ----------------------------- */
 router.post('/', auth, (req, res) => {
     if (!req.body) { // if not empty
-        res.status(400).send({ message: 'Content can not be empty!' });
+        res.status(400).send({message: 'Content can not be empty!'});
     } else {
 
         // new expense
@@ -26,7 +26,7 @@ router.post('/', auth, (req, res) => {
             .create(newExpense)
             .then(data => res.send(data))
             .catch(err => res.status(500)
-                .send({ message: err.message || 'error occurred while save expense' }));
+                .send({message: err.message || 'error occurred while save expense'}));
     }
 });
 
@@ -37,19 +37,19 @@ router.post('/fetch', auth, (req, res) => {
 
     if (limit) {
         expense.find({userId: req.userId}, {_id: 0, __v: 0})
-            .sort({ "date": -1 }) // arrange by date
+            .sort({"date": -1}) // arrange by date
             .skip(limit * page)
             .limit(limit)
             .exec()
             .then(expense => res.status(200).json(expense))
-            .catch(error => res.status(500).json({ message: error.message }));
+            .catch(error => res.status(500).json({message: error.message}));
     } else {
-        expense.find({ userId: req.userId }, { _id: 0, __v: 0 })
-            .sort({ "date": -1 })
+        expense.find({userId: req.userId}, {_id: 0, __v: 0})
+            .sort({"date": -1})
             .skip(page)
             .exec()
             .then(expense => res.status(200).json(expense))
-            .catch(error => res.status(500).json({ message: error.message }));
+            .catch(error => res.status(500).json({message: error.message}));
     }
 
 });
@@ -57,19 +57,19 @@ router.post('/fetch', auth, (req, res) => {
 /* ------------------------- get Expense by Category ------------------------ */
 router.get('/fetch/category/:category', auth, (req, res) => {
     const category = req.params.category;
-    expense.find({ userId: req.userId, category: category }, { _id: 0, __v: 0 })
+    expense.find({userId: req.userId, category: category}, {_id: 0, __v: 0})
         .exec()
         .then(expenses => res.status(200).json(expenses))
-        .catch(error => res.status(500).json({ message: error.message }));
+        .catch(error => res.status(500).json({message: error.message}));
 
 });
 
 
 /* -------------------------- get page counts total -------------------------- */
 router.post('/count', auth, (req, res) => {
-    expense.countDocuments({ userId: req.userId })
+    expense.countDocuments({userId: req.userId})
         .then(num_of_pages => res.status(200).json(num_of_pages))
-        .catch(error => res.status(500).json({ message: error.message }));
+        .catch(error => res.status(500).json({message: error.message}));
 
 });
 
