@@ -13,3 +13,4 @@ const expenseStatisticSchema = new mongoose.Schema({
 
 // Export expenseStatisticSchema so we can re-use it for all statistic collections
 module.exports = expenseStatisticSchema
+//.model('expense_statistics', expenseStatisticSchema);
