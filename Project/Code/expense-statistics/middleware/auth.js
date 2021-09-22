@@ -20,11 +20,7 @@ const authorizeRequest = (req, res, next) => {
             next();
         })
         .catch(error => {
-            let errorMessage = error.response?.data?.message;
-            if (!errorMessage) {
-                errorMessage = error.toString();
-            }
-
+            let errorMessage = error.response?.data?.message || error.toString();
             console.error(errorMessage);
             res.status(error.status || 500).json({ message: errorMessage });
         });
