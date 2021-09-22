@@ -28,8 +28,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/firebase', firebaseConfRouter);
-app.use('/expense', expensesRouter);
+app.use('/api/firebase', firebaseConfRouter);
+app.use('/api/expense', expensesRouter);
 
 // Any route we have not handled at the server, will be handled by client's
 // routing (index.html)

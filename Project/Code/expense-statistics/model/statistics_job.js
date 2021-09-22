@@ -264,7 +264,7 @@ const startStatisticsJob = () => {
     // second (optional), minute, hour, day of month, month, day of week
     // Our pattern is set to run every day, at the start of the dat (00:00) so
     // at the start of each day, we aggregate data of the previous day.
-    const scheduleExpression = '0 0 * * *'
+    const scheduleExpression = '0 0 * * *';
 
     doAggregations();
     cron.schedule(scheduleExpression, doAggregations);
