@@ -1,6 +1,7 @@
 /**
  * Use this function to convert some user object (specifically a mongo user document)
- * to a user we send to client. This way we hide mongo data, such as _id.
+ * to a user we send to client. This way we hide mongo data, such as _id, when
+ * there is no 'projections' functionality in mongoose.
  * @param user The user to convert
  * @return A user for client
  */

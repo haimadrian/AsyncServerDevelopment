@@ -13,18 +13,14 @@ const authorizeRequest = (req, res, next) => {
         }
     };
 
-    return axios.get(`${process.env.APP_SERVER_USER_URL}/auth`, config)
+    return axios.get(`${process.env.APP_SERVER_USER_URL}/api/auth`, config)
         .then(response => {
             req.userId = response.data.userId;
             req.userEmail = response.data.userEmail;
             next();
         })
         .catch(error => {
-            let errorMessage = error.response?.data?.message;
-            if (!errorMessage) {
-                errorMessage = error.toString();
-            }
-
+            let errorMessage = error.response?.data?.message || error.toString();
             console.error(errorMessage);
             res.status(error.status || 500).json({ message: errorMessage });
         });
