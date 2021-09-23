@@ -3,7 +3,7 @@ import '../../manage/components/Expenses/ExpensesFilter'
 import Options from './Options'
 import './ComboBoxList.css'
 
-const FilterDates = () => {
+const FilterDates = (props) => {
 
     const [selectReport,setSelectReport] = useState('Daily');
     const [days,setDays] = useState(1);
@@ -13,14 +13,17 @@ const FilterDates = () => {
         return Array(end - start + 1).fill().map((_, idx) => start + idx);
     }
 
-
     function selection() {
         const selectOption = ["Daily", "Months"];
         return selectOption;
     }
 
+    props.itemChooseReport(selectReport)
 
-    console.log(selectReport);
+
+    const sendDate = ()=>{
+        props.itemReport(years,months,days);
+    }
 
     //onChange={value => currencyChangeHandler(value)}
     const daysChangeHandler = (event) => {
@@ -70,10 +73,10 @@ const FilterDates = () => {
                         <Options dateOption={years}/>
                     ))}
                 </select>
-                <button className='new-expense__btn-statistic'>
+                <button className='new-expense__btn-statistic'
+                        onClick={sendDate}>
                     Generate
                 </button>
-
             </div>
         </div>
     );

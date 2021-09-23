@@ -1,73 +1,72 @@
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import {PieChart, Pie, Cell,ResponsiveContainer} from "recharts";
+import "./PieChartStatistics.css"
 
-const PieChartStatistics = () =>{
+const PieChartStatistics = (props) => {
 
+    let data = [];
+    let mDate = '';
+    let dataFrom = [];
+    let dayChoose = '';
+    let monthChoose ='';
 
-    const data = [
-        { name: "Group A", value: 400 },
-        { name: "Group B", value: 300 },
-        { name: "Group C", value: 300 },
-        { name: "Group D", value: 200 },
-        { name: "Group e", value: 250 }
-    ];
-    const COLORS = ["#deb400", "#3fd4ba", "#1044e8", "#de6b32" , "#FA8032"];
+    for (const [_, value] of Object.entries(props.statData)) {
+        dataFrom.push(value);
+    }
 
-    const renderLabel = ({percent,name}) =>{
+    console.log(dataFrom);
+    dataFrom.map(el => {
+        for (let [keys, value] of Object.entries(el)) {
+            if (keys === 'date') {
+                mDate = new Date(value);
+                dayChoose = mDate.getUTCDate();
+                monthChoose = mDate.getMonth();
+                console.log(monthChoose);
+                console.log(dayChoose)
+                if (dayChoose == props.day || (monthChoose == props.month && props.day == 0)) {
+                    for (let [_, categoryToExpenses] of Object.entries(el['categoryToExpenses'])) {
+                        data.push({
+                            name: categoryToExpenses['category'],
+                            value: categoryToExpenses['totalExpenses']
+                        });
+                    }
+                }
+            }
+        }
+    })
+
+    let COLORS = ["#ff7c43", "#665191", "#a05195", "#83af70", "#f95d6a",
+                  "#d45087","#003f5c","#665191","#488f31","#ffa600"];
+
+    const renderLabel = ({percent, name}) => {
 
 
         return `${name} ${(percent * 100).toFixed(0)}%`
     }
 
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-                                       cx,
-                                       cy,
-                                       midAngle,
-                                       innerRadius,
-                                       outerRadius,
-                                       percent,
-                                       index
-                                   }) => {
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-        //{`${(percent * 100).toFixed(0)}%`}
-
-        return (
-            <text
-                x={x}
-                y={y}
-                fill="white"
-                textAnchor={x > cx ? "start" : "end"}
-                dominantBaseline="central"
-            >
-
-                {`${data[index].name}`}
-            </text>
-        );
-    };
-
-    return(
-        <PieChart width={800} height={400}>
-            <Pie
-                data={data}
-                cx={400}
-                cy={200}
-                fill="#8884d8"
-                dataKey="value"
-                outerRadius={150}
-                labelLine={true}
-                label={renderLabel}
-            >
-                {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-            </Pie>
-        </PieChart>
+    return (
+        <div>
+            {data.length > 0 ?
+                <PieChart width={800} height={400}>
+                    <Pie
+                        isAnimationActive={false}
+                        data={data}
+                        cx={400}
+                        cy={200}
+                        fill="#8884d8"
+                        dataKey="value"
+                        outerRadius={150}
+                        labelLine={true}
+                        label={renderLabel}
+                    >
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
+                        ))}
+                    </Pie>
+                </PieChart> : <h1>No Data Found</h1>}
+        </div>
     );
 
 }
 
-
-export default PieChartStatistics
+export default PieChartStatistics;
