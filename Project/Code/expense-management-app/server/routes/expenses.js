@@ -60,33 +60,42 @@ router.delete('/', auth, async (req, res) => {
 });
 
 async function handleFetchExpensesRequest(req, res, page, limit = undefined) {
-    let query = expense.find({userId: req.userId}, {__v: 0})
-        .sort({"date": -1}) // arrange by date
-        .skip(limit * page);
-
-    if (limit) {
-        query = query.limit(limit);
-    }
+    let isOk = true;
 
     try {
-        const expenses = await query.exec();
-        res.status(200).json(expenses);
-    } catch (error) {
-        res.status(500).json({message: error.message});
+        page = parseInt(page || "0");
+        limit = parseInt(limit || "10");
+    } catch (ignore) {
+        isOk = false;
+        res.status(404).json({message: "page and limit must be numbers"});
+    }
+
+    if (isOk) {
+        let query = expense.find({userId: req.userId}, {__v: 0})
+            .sort({"date": -1}) // arrange by date
+            .skip(limit * page);
+
+        if (limit) {
+            query = query.limit(limit);
+        }
+
+        try {
+            const expenses = await query.exec();
+            res.status(200).json(expenses);
+        } catch (error) {
+            res.status(500).json({message: error.message});
+        }
     }
 }
 
 /* -------------------------- get expenses of user ------------------------- */
 router.get('/fetch/page/:page', auth, async (req, res) => {
-    const page = req.params.page || 0;
-    await handleFetchExpensesRequest(req, res, page);
+    await handleFetchExpensesRequest(req, res, req.params.page);
 });
 
 /* -------------------------- get expenses of user ------------------------- */
 router.get('/fetch/page/:page/limit/:limit', auth, async (req, res) => {
-    const page = req.params.page || 0;
-    const limit = req.params.limit || 10;
-    await handleFetchExpensesRequest(req, res, page, limit);
+    await handleFetchExpensesRequest(req, res, req.params.page, req.params.limit);
 });
 
 /* ------------------------- get Expense by Category ------------------------ */
@@ -119,20 +128,30 @@ router.get('/count', auth, async (req, res) => {
  * of some day.
  */
 router.get('/fetch/all/start/:start/end/:end', authAdmin, async (req, res) => {
-    const startTime = new Date(parseInt(req.params.start));
-    const endTime = new Date(parseInt(req.params.end));
-
-    console.log('Querying all expenses between', startTime, '(inclusive) to', endTime, '(exclusive)');
+    let startTime = undefined;
+    let endTime = undefined;
 
     try {
-        const expenses =
-            await expense.find({date: {$gte: startTime, $lt: endTime}}, {_id: 0, __v: 0})
-                .sort({"date": 1})
-                .exec();
+        startTime = new Date(parseInt(req.params.start));
+        endTime = new Date(parseInt(req.params.end));
+    } catch (ignore) {
+        res.status(400).json({message: "start and end must represent amount of millis since epoch"});
+    }
 
-        res.status(200).json(expenses);
-    } catch (error) {
-        res.status(500).json({message: error.message});
+    if (startTime) {
+        console.log('Querying all expenses between', startTime, '(inclusive) to', endTime, '(exclusive)');
+
+        try {
+            const expenses =
+                await expense.find({date: {$gte: startTime, $lt: endTime}},
+                    {_id: 0, __v: 0})
+                    .sort({"date": 1})
+                    .exec();
+
+            res.status(200).json(expenses);
+        } catch (error) {
+            res.status(500).json({message: error.message});
+        }
     }
 });
 
