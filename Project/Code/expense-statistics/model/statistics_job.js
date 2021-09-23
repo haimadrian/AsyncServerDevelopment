@@ -51,7 +51,7 @@ const startStatisticsJob = () => {
                     }
                 };
 
-                let path = `expense/fetch/all/start/${startTime.getTime()}/end/${endTime.getTime()}`;
+                let path = `api/expense/fetch/all/start/${startTime.getTime()}/end/${endTime.getTime()}`;
                 return axios.get(`${process.env.APP_SERVER_EXPENSES_URL}/${path}`, config);
             });
     };
@@ -83,7 +83,7 @@ const startStatisticsJob = () => {
             return resultArray;
         };
 
-        return Array(...array.reduce(reducer, []));
+        return Array(...(array.reduce(reducer, [])));
     };
 
     /**
@@ -177,9 +177,123 @@ const startStatisticsJob = () => {
     }
 
     /**
-     * Main logic of the job, here we aggregate the data, grouped by user and category.
+     * Checks if there is a need to calculate aggregations.<br/>
+     * We just check if there is any result from yesterday. If so, it means we have
+     * already ran the aggregations.
+     * @param {Date} startTime Yesterday's midnight
+     * @param {Date} endTime Today's midnight
+     * @return {Promise<boolean>} Whether there is a need to calculate aggregations or not
      */
-    const doAggregations = () => {
+    const shouldDoAggregations = async (startTime, endTime) => {
+        let yesterdaysDocs = await dailyExpenses.findOne({
+            date: {
+                $gte: startTime,
+                $lte: endTime
+            }
+        }).exec();
+
+        return (!yesterdaysDocs);
+    }
+
+    /**
+     * Calculate statistics as daily expenses entity.<br/>
+     * The statistics will contain aggregated data for the specified time range, where
+     * the data is being taken from expense management micro service. (Raw data)
+     * @param {Date} startTime Start time to aggregate data for
+     * @param {Date} endTime End time to aggregate data for
+     * @return {Promise<any>} Indication to respond after documents have been inserted to daily_expenses
+     */
+    const calculateDailyExpenses = async (startTime, endTime) => {
+        let expensesResponse = await fetchExpenses(startTime, endTime);
+        let expenseStatistics = aggregateExpenses(expensesResponse.data, endTime);
+        let expenseStatisticsDocs = await dailyExpenses.insertMany(expenseStatistics);
+        console.log(`Saved daily expense statistics: ${expenseStatisticsDocs}`);
+    }
+
+    /**
+     * Calculate statistics as monthly expenses entity.<br/>
+     * The statistics will contain aggregated data for the specified time range, where
+     * the data is being taken from daily expenses collection. (Aggregated data)
+     * @param {Date} startTime Start time to aggregate data for
+     * @param {Date} endTime End time to aggregate data for
+     * @return {Promise<any>} Indication to respond after documents have been inserted to monthly_expenses
+     */
+    const calculateMonthlyExpenses = async (startTime, endTime) => {
+        console.log('Querying all daily expenses between',
+            startTime,
+            '(inclusive) to ',
+            endTime,
+            '(exclusive)');
+
+        let dailyExpensesRef = await dailyExpenses.find({
+            date: {
+                $gte: startTime,
+                $lte: endTime
+            }
+        }, {_id: 0, __v: 0})
+            .sort({"date": 1})
+            .exec();
+
+        let expenseStatistics = aggregateExpensesMonthly(dailyExpensesRef, endTime);
+        let expenseStatisticsDocs = await monthlyExpenses.insertMany(expenseStatistics);
+        console.log(`Saved monthly expense statistics: ${expenseStatisticsDocs}`);
+    }
+
+    /**
+     * Main logic of the job, here we aggregate the data, grouped by user and category.
+     * @param {Date} startTime Start time to aggregate data for
+     * @param {Date} endTime End time to aggregate data for
+     * @return {Promise<any>}
+     */
+    const doSingleAggregationsForRange = async (startTime, endTime) => {
+        try {
+            console.log('Calculating aggregations for: startTime=', startTime, 'endTime=', endTime);
+            await currencyConverter.refresh();
+
+            // Make sure we do not aggregate twice for the same day
+            if (await shouldDoAggregations(startTime, endTime)) {
+                await calculateDailyExpenses(startTime, endTime);
+
+                // If month has passed, calculate month statistics
+                if (startTime.getMonth() !== endTime.getMonth()) {
+                    // Start of month is second day, since we store aggregations of
+                    // a previous day.
+                    let startOfMonth = new Date(startTime);
+                    startOfMonth.setUTCDate(2);
+                    let startOfNextMonth = new Date(startOfMonth);
+                    startOfNextMonth.setUTCDate(1);
+                    startOfNextMonth.setUTCMonth(startOfMonth.getUTCMonth() + 1);
+
+                    await calculateMonthlyExpenses(startOfMonth, startOfNextMonth);
+                }
+            }
+        } catch (error) {
+            console.error(error.response?.data?.message || error.toString());
+        }
+    }
+
+    /**
+     * A helper to run job for data from the past. For dev purposes
+     * @param {Date} startTime Start time to aggregate data for
+     * @param {Date} endTime End time to aggregate data for
+     * @return {Promise<any>}
+     */
+    const doAggregationsForRange = async (startTime, endTime) => {
+        while (startTime.getTime() < endTime.getTime()) {
+            let endTimeDayAfter = new Date(startTime.getTime());
+            endTimeDayAfter.setUTCDate(startTime.getUTCDate() + 1);
+
+            await doSingleAggregationsForRange(startTime, endTimeDayAfter);
+
+            startTime = endTimeDayAfter;
+        }
+    }
+
+    /**
+     * Main logic of the job, here we aggregate the data, grouped by user and category.
+     * @return {Promise<any>}
+     */
+    const doAggregations = async () => {
         console.log('Running statistics aggregator job. Time:', new Date(Date.now()));
 
         const currTime = new Date(Date.now());
@@ -187,77 +301,20 @@ const startStatisticsJob = () => {
         const endTime = new Date(startTime);
         endTime.setUTCDate(startTime.getUTCDate() + 1);
 
-        // Start of month is second day, since we store aggregations of
-        // a previous day.
-        let startOfMonth = new Date(startTime);
-        startOfMonth.setUTCDate(2);
-        let startOfNextMonth = new Date(startOfMonth);
-        startOfNextMonth.setUTCDate(1);
-        startOfNextMonth.setUTCMonth(startOfMonth.getUTCMonth() + 1);
-
-        currencyConverter.refresh()
-            // Make sure we do not aggregate twice for the same day
-            .then(() => dailyExpenses.findOne({
-                date: {
-                    $gte: startTime,
-                    $lte: endTime
-                }
-            }).exec())
-            .then(docs => {
-                if (!docs) {
-                    return fetchExpenses(startTime, endTime);
-                }
-            })
-            .then(expensesResponse => {
-                if (expensesResponse) {
-                    return aggregateExpenses(expensesResponse.data, endTime);
-                }
-            })
-            .then(expenseStatistics => {
-                if (expenseStatistics) {
-                    return dailyExpenses.insertMany(expenseStatistics);
-                }
-            })
-            .then((expenseStatistics) => {
-                if (expenseStatistics) {
-                    console.log(`Saved daily expense statistics: ${expenseStatistics}`);
-
-                    // If month has passed, calculate month statistics
-                    if (startTime.getMonth() !== endTime.getMonth()) {
-                        console.log('Querying all daily expenses between',
-                            startOfMonth,
-                            '(inclusive) to ',
-                            startOfNextMonth,
-                            '(exclusive)');
-
-                        return dailyExpenses.find({
-                            date: {
-                                $gte: startOfMonth,
-                                $lte: startOfNextMonth
-                            }
-                        }, {_id: 0, __v: 0})
-                            .sort({"date": 1})
-                            .exec();
-                    }
-                }
-            })
-            .then(dailyExpenses => {
-                if (dailyExpenses) {
-                    return aggregateExpensesMonthly(dailyExpenses, startOfNextMonth);
-                }
-            })
-            .then(expenseStatistics => {
-                if (expenseStatistics) {
-                    return monthlyExpenses.insertMany(expenseStatistics);
-                }
-            })
-            .then(expenseStatistics => {
-                if (expenseStatistics) {
-                    console.log(`Saved monthly expense statistics: ${expenseStatistics}`);
-                }
-            })
-            .catch(error => console.error(error.response?.data?.message || error.toString()));
+        try {
+            await doSingleAggregationsForRange(startTime, endTime);
+        } finally {
+            console.log('Statistics aggregator job complete. Time:', new Date(Date.now()));
+        }
     };
+
+    /*
+    // For DEV purposes we can run through a whole year and calculate statistics for
+    // expenses from the past. (since the default behavior of statistics job is
+    // to calculate daa for the past day only.)
+    let today = new Date(Date.now());
+    today.setUTCHours(0, 0, 0, 0);
+    doAggregationsForRange(new Date(2021, 0, 1, 0, 0, 0, 0), today);*/
 
     // Use an expression to define our schedule. There are 6 parts, where the first
     // part is optional. Each part represents, from left to right:
@@ -266,8 +323,8 @@ const startStatisticsJob = () => {
     // at the start of each day, we aggregate data of the previous day.
     const scheduleExpression = '0 0 * * *';
 
-    doAggregations();
-    cron.schedule(scheduleExpression, doAggregations);
+    doAggregations().then(() =>
+        cron.schedule(scheduleExpression, doAggregations, {scheduled: true}));
 }
 
 module.exports = {startStatisticsJob}

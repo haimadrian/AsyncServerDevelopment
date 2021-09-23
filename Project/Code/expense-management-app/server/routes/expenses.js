@@ -81,16 +81,22 @@ router.post('/count', auth, (req, res) => {
  * This way we can authorize expense-statistics server which requests all of the statistics
  * of some day.
  */
-router.get('/fetch/all/start/:start/end/:end', authAdmin, (req, res) => {
+router.get('/fetch/all/start/:start/end/:end', authAdmin, async (req, res) => {
     let startTime = new Date(parseInt(req.params.start));
     let endTime = new Date(parseInt(req.params.end));
 
     console.log('Querying all expenses between', startTime, '(inclusive) to', endTime, '(exclusive)');
-    expense.find({date: {$gte: startTime, $lt: endTime}}, {_id: 0, __v: 0})
-        .sort({"date": 1})
-        .exec()
-        .then(expenses => res.status(200).json(expenses))
-        .catch(error => res.status(500).json({message: error.message}));
+
+    try {
+        let expenses =
+            await expense.find({date: {$gte: startTime, $lt: endTime}}, {_id: 0, __v: 0})
+                .sort({"date": 1})
+                .exec();
+
+        res.status(200).json(expenses);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
 });
 
 module.exports = router;
