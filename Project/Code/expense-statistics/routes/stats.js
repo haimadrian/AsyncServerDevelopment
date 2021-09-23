@@ -18,7 +18,7 @@ function handleFetchRange(req, res, collection, year, month = undefined) {
     startTime.setUTCHours(0, 0, 0, 0);
 
     const endTime = new Date(startTime.getTime());
-    if (month) {
+    if (!isNaN(month) && (month >= 0) && (month <= 11)) {
         endTime.setUTCMonth(month + 1);
     } else {
         endTime.setUTCFullYear(year + 1);

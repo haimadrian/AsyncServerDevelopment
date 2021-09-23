@@ -6,8 +6,8 @@ const authAdmin = require("../middleware/authAdmin");
 const expense = require("../model/mongo/expense");
 
 /* ----------------------------- add an expense ----------------------------- */
-router.post('/', auth, (req, res) => {
-    if (!req.body) { // if not empty
+router.post('/', auth, async (req, res) => {
+    if (!req.body) {
         res.status(400).send({message: 'Content can not be empty!'});
     } else {
         // new expense
@@ -20,56 +20,93 @@ router.post('/', auth, (req, res) => {
             date: req.body.date
         });
 
-        // save expense in the database
-        expense
-            .create(newExpense)
-            .then(data => res.send(data))
-            .catch(err => res.status(500)
-                .send({message: err.message || 'error occurred while save expense'}));
+        try {
+            // save expense in the database
+            const data = await expense.create(newExpense);
+            res.status(200).json(data);
+        } catch (error) {
+            res.status(500).send({message: error.message});
+        }
     }
 });
 
-/* -------------------------- get number of expense ------------------------- */
-router.post('/fetch', auth, (req, res) => {
-    const page = req.body.page || 0;
-    const limit = req.body.limit;
+router.delete('/', auth, async (req, res) => {
+    if (!req.body?.expenseId) {
+        res.status(400).send({message: 'Content can not be empty!'});
+    } else {
+        const expenseId = req.body.expenseId;
+
+        try {
+            // Delete expense from the database
+            // We disallow deletion of the past day since it would corrupt computed statistics.
+            const startTime = new Date(Date.now());
+            startTime.setUTCHours(0, 0, 0, 0);
+            const deletedCountResult = await expense.deleteOne({
+                _id: expenseId,
+                userId: req.userId,
+                date: {$gte: startTime}
+            });
+
+            if (deletedCountResult.deletedCount > 0) {
+                res.status(200).json(deletedCountResult);
+            } else {
+                const errorMessage = "Unable to delete expense. You can delete today's expenses only";
+                res.status(400).json({message: errorMessage});
+            }
+        } catch (error) {
+            res.status(400).json({message: error.message});
+        }
+    }
+});
+
+async function handleFetchExpensesRequest(req, res, page, limit = undefined) {
+    let query = expense.find({userId: req.userId}, {__v: 0})
+        .sort({"date": -1}) // arrange by date
+        .skip(limit * page);
 
     if (limit) {
-        expense.find({userId: req.userId}, {_id: 0, __v: 0})
-            .sort({"date": -1}) // arrange by date
-            .skip(limit * page)
-            .limit(limit)
-            .exec()
-            .then(expense => res.status(200).json(expense))
-            .catch(error => res.status(500).json({message: error.message}));
-    } else {
-        expense.find({userId: req.userId}, {_id: 0, __v: 0})
-            .sort({"date": -1})
-            .skip(page)
-            .exec()
-            .then(expense => res.status(200).json(expense))
-            .catch(error => res.status(500).json({message: error.message}));
+        query = query.limit(limit);
     }
 
+    try {
+        const expenses = await query.exec();
+        res.status(200).json(expenses);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+/* -------------------------- get expenses of user ------------------------- */
+router.get('/fetch/page/:page', auth, async (req, res) => {
+    const page = req.params.page || 0;
+    await handleFetchExpensesRequest(req, res, page);
+});
+
+/* -------------------------- get expenses of user ------------------------- */
+router.get('/fetch/page/:page/limit/:limit', auth, async (req, res) => {
+    const page = req.params.page || 0;
+    const limit = req.params.limit || 10;
+    await handleFetchExpensesRequest(req, res, page, limit);
 });
 
 /* ------------------------- get Expense by Category ------------------------ */
 router.get('/fetch/category/:category', auth, (req, res) => {
     const category = req.params.category;
-    expense.find({userId: req.userId, category: category}, {_id: 0, __v: 0})
+    expense.find({userId: req.userId, category: category}, {__v: 0})
         .exec()
         .then(expenses => res.status(200).json(expenses))
         .catch(error => res.status(500).json({message: error.message}));
-
 });
 
 
 /* -------------------------- get page counts total -------------------------- */
-router.post('/count', auth, (req, res) => {
-    expense.countDocuments({userId: req.userId})
-        .then(num_of_pages => res.status(200).json(num_of_pages))
-        .catch(error => res.status(500).json({message: error.message}));
-
+router.get('/count', auth, async (req, res) => {
+    try {
+        const userExpensesCount = await expense.countDocuments({userId: req.userId});
+        res.status(200).json(userExpensesCount);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
 });
 
 /*
@@ -82,13 +119,13 @@ router.post('/count', auth, (req, res) => {
  * of some day.
  */
 router.get('/fetch/all/start/:start/end/:end', authAdmin, async (req, res) => {
-    let startTime = new Date(parseInt(req.params.start));
-    let endTime = new Date(parseInt(req.params.end));
+    const startTime = new Date(parseInt(req.params.start));
+    const endTime = new Date(parseInt(req.params.end));
 
     console.log('Querying all expenses between', startTime, '(inclusive) to', endTime, '(exclusive)');
 
     try {
-        let expenses =
+        const expenses =
             await expense.find({date: {$gte: startTime, $lt: endTime}}, {_id: 0, __v: 0})
                 .sort({"date": 1})
                 .exec();

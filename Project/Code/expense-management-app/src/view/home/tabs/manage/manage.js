@@ -25,7 +25,7 @@ const App = () => {
     }, []);
 
 
-    axios.post(urls.totalDataCount)
+    axios.get(urls.totalDataCount)
         .then(response => {
             setTotalDataCount(response.data);
         })
@@ -33,7 +33,7 @@ const App = () => {
 
 
     function getData(page) {
-        axios.post(urls.expenseFetch, {page: page, limit: limit})
+        axios.get(urls.expenseFetch(page, limit))
             .then(response => {
                 for (let idx = 0; idx < response.data.length; idx++) {
                     newDate = new Date(response.data[idx].date);

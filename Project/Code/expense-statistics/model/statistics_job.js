@@ -17,7 +17,7 @@ const startStatisticsJob = () => {
      * @return {Date} Yesterday of the specified date
      */
     const yesterday = (relativeTo) => {
-        let startTime = new Date(relativeTo);
+        const startTime = new Date(relativeTo);
         startTime.setUTCHours(0, 0, 0, 0);
         startTime.setUTCDate(relativeTo.getUTCDate() - 1);
         return startTime;
@@ -39,21 +39,20 @@ const startStatisticsJob = () => {
      * @param {Date} endTime End time to fetch all expenses with date less than.
      * @return {Promise<AxiosResponse<Array[any]>>} A promise to handle the response from expenses server
      */
-    const fetchExpenses = (startTime, endTime) => {
-        return jwtSign({
+    const fetchExpenses = async (startTime, endTime) => {
+        const jwt = await jwtSign({
             EXPENSE_DB_USERNAME: JSON.stringify(encode(process.env.EXPENSE_DB_USERNAME)),
             EXPENSE_DB_PWD: JSON.stringify(encode(process.env.EXPENSE_DB_PWD))
-        })
-            .then(jwt => {
-                let config = {
-                    headers: {
-                        authorization: `Bearer ${jwt}`
-                    }
-                };
+        });
 
-                let path = `api/expense/fetch/all/start/${startTime.getTime()}/end/${endTime.getTime()}`;
-                return axios.get(`${process.env.APP_SERVER_EXPENSES_URL}/${path}`, config);
-            });
+        const config = {
+            headers: {
+                authorization: `Bearer ${jwt}`
+            }
+        };
+
+        const path = `api/expense/fetch/all/start/${startTime.getTime()}/end/${endTime.getTime()}`;
+        return axios.get(`${process.env.APP_SERVER_EXPENSES_URL}/${path}`, config);
     };
 
     /**
@@ -69,12 +68,12 @@ const startStatisticsJob = () => {
         // and for each element, extract its key. This key is what we will use for
         // separating into groups.
         const reducer = (resultArray, currentElement) => {
-            let currentGroupByValue = currentElement[key];
-            let existingGroup = resultArray.find(item => item && item[key] === currentGroupByValue);
+            const currentGroupByValue = currentElement[key];
+            const existingGroup = resultArray.find(item => item && item[key] === currentGroupByValue);
             if (existingGroup) {
                 existingGroup.values.push(currentElement);
             } else {
-                let item = {};
+                const item = {};
                 item[key] = currentGroupByValue;
                 item.values = [currentElement];
                 resultArray.push(item);
@@ -94,7 +93,7 @@ const startStatisticsJob = () => {
      */
     const sum = (array, key) => {
         const reducer = (previousValue, currentItem) => {
-            let value = key instanceof Function ? key(currentItem) : currentItem[key];
+            const value = key instanceof Function ? key(currentItem) : currentItem[key];
             return previousValue + value;
         }
 
@@ -149,7 +148,7 @@ const startStatisticsJob = () => {
         // Group expenses by userId
         const expenseStatistics = groupBy(expenses, 'userId');
         expenseStatistics.forEach(expensesOfUser => {
-            let allCategoryToExpenses = [];
+            const allCategoryToExpenses = [];
             for (let value of expensesOfUser.values) {
                 allCategoryToExpenses.push(...value.categoryToExpenses);
             }
@@ -185,14 +184,14 @@ const startStatisticsJob = () => {
      * @return {Promise<boolean>} Whether there is a need to calculate aggregations or not
      */
     const shouldDoAggregations = async (startTime, endTime) => {
-        let yesterdaysDocs = await dailyExpenses.findOne({
+        const yesterdaysDocsCount = await dailyExpenses.countDocuments({
             date: {
                 $gte: startTime,
                 $lte: endTime
             }
         }).exec();
 
-        return (!yesterdaysDocs);
+        return (yesterdaysDocsCount === 0);
     }
 
     /**
@@ -204,10 +203,14 @@ const startStatisticsJob = () => {
      * @return {Promise<any>} Indication to respond after documents have been inserted to daily_expenses
      */
     const calculateDailyExpenses = async (startTime, endTime) => {
-        let expensesResponse = await fetchExpenses(startTime, endTime);
-        let expenseStatistics = aggregateExpenses(expensesResponse.data, endTime);
-        let expenseStatisticsDocs = await dailyExpenses.insertMany(expenseStatistics);
-        console.log(`Saved daily expense statistics: ${expenseStatisticsDocs}`);
+        const expensesResponse = await fetchExpenses(startTime, endTime);
+
+        // Make sure we have some data to work with..
+        if ((expensesResponse.status === 200) && (expensesResponse.data.length > 0)) {
+            const expenseStatistics = aggregateExpenses(expensesResponse.data, endTime);
+            const expenseStatisticsDocs = await dailyExpenses.insertMany(expenseStatistics);
+            console.log(`Saved daily expense statistics: ${expenseStatisticsDocs}`);
+        }
     }
 
     /**
@@ -225,7 +228,7 @@ const startStatisticsJob = () => {
             endTime,
             '(exclusive)');
 
-        let dailyExpensesRef = await dailyExpenses.find({
+        const dailyExpensesRef = await dailyExpenses.find({
             date: {
                 $gte: startTime,
                 $lte: endTime
@@ -234,8 +237,8 @@ const startStatisticsJob = () => {
             .sort({"date": 1})
             .exec();
 
-        let expenseStatistics = aggregateExpensesMonthly(dailyExpensesRef, endTime);
-        let expenseStatisticsDocs = await monthlyExpenses.insertMany(expenseStatistics);
+        const expenseStatistics = aggregateExpensesMonthly(dailyExpensesRef, endTime);
+        const expenseStatisticsDocs = await monthlyExpenses.insertMany(expenseStatistics);
         console.log(`Saved monthly expense statistics: ${expenseStatisticsDocs}`);
     }
 
@@ -258,9 +261,9 @@ const startStatisticsJob = () => {
                 if (startTime.getMonth() !== endTime.getMonth()) {
                     // Start of month is second day, since we store aggregations of
                     // a previous day.
-                    let startOfMonth = new Date(startTime);
+                    const startOfMonth = new Date(startTime);
                     startOfMonth.setUTCDate(2);
-                    let startOfNextMonth = new Date(startOfMonth);
+                    const startOfNextMonth = new Date(startOfMonth);
                     startOfNextMonth.setUTCDate(1);
                     startOfNextMonth.setUTCMonth(startOfMonth.getUTCMonth() + 1);
 
@@ -280,7 +283,7 @@ const startStatisticsJob = () => {
      */
     const doAggregationsForRange = async (startTime, endTime) => {
         while (startTime.getTime() < endTime.getTime()) {
-            let endTimeDayAfter = new Date(startTime.getTime());
+            const endTimeDayAfter = new Date(startTime.getTime());
             endTimeDayAfter.setUTCDate(startTime.getUTCDate() + 1);
 
             await doSingleAggregationsForRange(startTime, endTimeDayAfter);
