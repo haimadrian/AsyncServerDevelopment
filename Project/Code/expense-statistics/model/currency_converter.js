@@ -29,7 +29,7 @@ class CurrencyConverter {
      * @return {Promise}
      */
     async refresh() {
-        let now = Date.now();
+        const now = Date.now();
 
         const oneDayMillis = 24 * 60 * 60 * 1000;
         if (now - this.#lastRefreshTime >= oneDayMillis) {
@@ -64,8 +64,8 @@ class CurrencyConverter {
      * @return {Promise}
      */
     async #loadXml() {
-        let response = await axios.get('https://www.boi.org.il/currency.xml');
-        let currenciesJsFromXml = await xml2js.parseStringPromise(response.data);
+        const response = await axios.get('https://www.boi.org.il/currency.xml');
+        const currenciesJsFromXml = await xml2js.parseStringPromise(response.data);
         this.#parseDoc(currenciesJsFromXml);
     }
 

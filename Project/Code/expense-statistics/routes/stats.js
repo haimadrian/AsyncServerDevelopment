@@ -5,33 +5,38 @@ const dailyExpenses = require("../model/mongo/daily_expenses");
 const monthlyExpenses = require("../model/mongo/monthly_expenses");
 
 function handleFetchRange(req, res, collection, year, month = undefined) {
-    /* monthValue :
-    0 represents January, 11 represents December,
-    -1 represents December of the previous year,
-    and 12 represents January of the following year.
-    dayValue :
-    0 is provided for dayValue, the date will be set to the last day of the previous month. */
+    let isOk = true;
 
-    // create new dates
-    const startTime = new Date();
-    startTime.setUTCFullYear(year, month || 0, 1);
-    startTime.setUTCHours(0, 0, 0, 0);
-
-    const endTime = new Date(startTime.getTime());
-    if (!isNaN(month) && (month >= 0) && (month <= 11)) {
-        endTime.setUTCMonth(month + 1);
-    } else {
-        endTime.setUTCFullYear(year + 1);
+    try {
+        year = parseInt(year || "2021");
+        month = parseInt(month || "0");
+    } catch (ignore) {
+        isOk = false;
+        res.status(404).json({message: "year and month must be numbers"});
     }
 
-    console.log('startTime:', startTime, 'endTime:', endTime);
+    if (isOk) {
+        // create new dates
+        const startTime = new Date();
+        startTime.setUTCFullYear(year, month, 1);
+        startTime.setUTCHours(0, 0, 0, 0);
 
-    collection.find({userId: req.userId, date: {$gte: startTime, $lt: endTime}},
-        {_id: 0, __v: 0})
-        .sort({"date": 1})
-        .exec()
-        .then(expense_statistics => res.status(200).json(expense_statistics))
-        .catch(error => res.status(500).json({message: error.message}));
+        const endTime = new Date(startTime.getTime());
+        if ((month >= 0) && (month <= 11)) {
+            endTime.setUTCMonth(month + 1);
+        } else {
+            endTime.setUTCFullYear(year + 1);
+        }
+
+        console.log('startTime:', startTime, 'endTime:', endTime);
+
+        collection.find({userId: req.userId, date: {$gte: startTime, $lt: endTime}},
+            {_id: 0, __v: 0})
+            .sort({"date": 1})
+            .exec()
+            .then(expense_statistics => res.status(200).json(expense_statistics))
+            .catch(error => res.status(500).json({message: error.message}));
+    }
 }
 
 router.get('/year/:year', auth, (req, res) => {
