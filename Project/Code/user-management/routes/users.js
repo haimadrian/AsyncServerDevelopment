@@ -13,7 +13,7 @@ const userUtil = require("../model/user_util");
  */
 function validateUserInfoReq(req) {
     return new Promise((resolve, reject) => {
-        let userInfo = req.body;
+        const userInfo = req.body;
 
         if (!userInfo) {
             reject('Missing request body');
@@ -39,7 +39,7 @@ function validateUserInfoReq(req) {
  * @return {*[]} changes
  */
 function collectChanges(existingUser, newUser) {
-    let changes = [];
+    const changes = [];
 
     for (let prop of ['email', 'firstName', 'lastName', 'phoneNumber', 'maritalStatus']) {
         if (existingUser[prop] !== newUser[prop]) {
@@ -85,26 +85,26 @@ router.post('/info', auth, async (req, res) => {
     try {
         await validateUserInfoReq(req);
 
-        let user = await user.findOne({firebaseUserId: req.userId}).exec();
+        const user = await user.findOne({firebaseUserId: req.userId}).exec();
 
-        let update = userUtil.toPrivateUser(req.body, req.userId, user.version);
-        let changes = collectChanges(user, update);
+        const update = userUtil.toPrivateUser(req.body, req.userId, user.version);
+        const changes = collectChanges(user, update);
 
         // Update only if there is a difference
         if (changes.length === 0) {
             res.status(200).json({message: 'Nothing to update'});
         } else {
-            let userChangesEntity = {
+            const userChangesEntity = {
                 firebaseUserId: req.userId,
                 changes: changes,
                 version: user.version,
                 updateDate: new Date()
             }
 
-            let updatedUserChange = await userChanges.create(userChangesEntity);
-            let update = userUtil.toPrivateUser(req.body, req.userId, updatedUserChange.version + 1);
+            const updatedUserChange = await userChanges.create(userChangesEntity);
+            const update = userUtil.toPrivateUser(req.body, req.userId, updatedUserChange.version + 1);
 
-            let updatedUser = await user.updateOne({firebaseUserId: req.userId}, update).exec();
+            const updatedUser = await user.updateOne({firebaseUserId: req.userId}, update).exec();
             res.status(200).json(userUtil.toPublicUser(updatedUser));
         }
     } catch (error) {

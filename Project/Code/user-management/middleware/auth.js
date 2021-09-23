@@ -8,18 +8,15 @@ const userAuthCache = require("../model/user_auth_cache");
 const firebase = require('../firebase');
 
 const verifyToken = async (req, res, next) => {
-    console.log('verifyToken');
     const token = jwtUtils.extractTokenFromRequest(req);
 
     if (!token) {
-        return res.status(401).json({
-            message: 'A token is required for authorization'
-        });
+        return res.status(401).json({message: 'A token is required for authorization'});
     }
 
     // Cache it to reduce requests that we send to firebase.
     if (userAuthCache.contains(token)) {
-        let userData = userAuthCache.get(token);
+        const userData = userAuthCache.get(token);
         req.userId = userData.uid;
         req.userEmail = userData.email;
         req.jwt = token;
@@ -28,7 +25,7 @@ const verifyToken = async (req, res, next) => {
         try {
             // Verify the token and set user details in the request, so our web services
             // can use it
-            let decodedToken = await firebase.app.auth().verifyIdToken(token);
+            const decodedToken = await firebase.app.auth().verifyIdToken(token);
             userAuthCache.put(token, {
                 uid: decodedToken.uid,
                 email: decodedToken.email
@@ -45,9 +42,7 @@ const verifyToken = async (req, res, next) => {
                 errorMessage = 'Token Expired';
             }
 
-            res.status(403).json({
-                message: errorMessage
-            });
+            res.status(403).json({message: errorMessage});
         }
     }
 };
