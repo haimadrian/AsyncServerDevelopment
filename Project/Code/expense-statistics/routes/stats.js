@@ -20,7 +20,7 @@ function handleFetchRange(req, res, collection, year, month = undefined) {
     if (isOk) {
         // create new dates
         const startTime = new Date();
-        startTime.setUTCFullYear(yearAsNum, monthAsNum, 1);
+        startTime.setUTCFullYear(yearAsNum, monthAsNum, 2);
         startTime.setUTCHours(0, 0, 0, 0);
 
         const endTime = new Date(startTime.getTime());

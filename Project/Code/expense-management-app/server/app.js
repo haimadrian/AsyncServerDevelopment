@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const firebaseConfRouter = require('./routes/firebaseconf');
 const expensesRouter = require('./routes/expenses');
 
 const app = express();
@@ -28,7 +27,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/firebase', firebaseConfRouter);
 app.use('/api/expense', expensesRouter);
 
 // Any route we have not handled at the server, will be handled by client's

@@ -7,9 +7,9 @@ const PieChartStatistics = (props) => {
     let data = [];
     let mDate = '';
     let dataFrom = [];
-    let dayChoose = '';
-    let monthChoose ='';
-    let yearChoose ='';
+    let dayChoose = 0;
+    let monthChoose = 0;
+    let yearChoose = 0;
 
     for (const [_, value] of Object.entries(props.statData)) {
         dataFrom.push(value);
@@ -46,10 +46,40 @@ const PieChartStatistics = (props) => {
     return (
         <div className='vert'>
             {data.length > 0 ?
-            <h1>General Data of the Date {props.day != 0 ? props.day +".": ""}{props.month+1 + "." + yearChoose}</h1>
-                : <h1>No Data Found For PieChart</h1>}
+            <h1>Expense per Category for: {
+                props.day != 0
+                    ?
+                    ((props.day == 1)
+                        ?
+                        new Date(props.year, props.month, 0).getDate()
+                            :
+                        (props.day - 1)) + "."
+                :
+                ""
+            }
+            {
+                props.day == 0 ?
+                    ((props.month == 0
+                        ?
+                        12 : props.month) +
+                        "." +
+                        (props.month == 0
+                            ?
+                            (props.year - 1)
+                            :
+                            props.year))
+                    :
+                    (props.day == 1
+                        ?
+                        (props.month + "." + props.year)
+                        :
+                        ((props.month + 1) + "." + props.year)
+                    )
+            }</h1>
+                : <h1>No Data</h1>}
             {data.length > 0 ?
-                <PieChart width={800} height={400}>
+                <ResponsiveContainer width="90%" height={400}>
+                <PieChart>
                     <Pie
                         isAnimationActive={false}
                         data={data}
@@ -63,7 +93,8 @@ const PieChartStatistics = (props) => {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
                         ))}
                     </Pie>
-                </PieChart>:''}
+                </PieChart>
+                </ResponsiveContainer>:''}
         </div>
     );
 

@@ -63,7 +63,7 @@ function collectChanges(existingUser, newUser) {
 
 router.put('/signup', auth, (req, res) => {
     user.create({firebaseUserId: req.userId, email: req.userEmail, version: 1})
-        .then(user => res.status(200).json(userUtil.toPublicUser(user)))
+        .then(userDoc => res.status(200).json(userUtil.toPublicUser(userDoc)))
         .catch((error) => res.status(500).json({message: error}));
 });
 
@@ -73,11 +73,10 @@ router.post('/signout', auth, (req, res) => {
 });
 
 // GET user by id.
-// userId is accessible through req.params.userId
 router.get('/info', auth, (req, res) => {
     user.findOne({firebaseUserId: req.userId}, {_id: 0, __v: 0})
         .exec()
-        .then(user => res.status(200).json(user))
+        .then(userDoc => res.status(200).json(userDoc))
         .catch(() => res.status(404).json({message: 'NOT FOUND'}));
 });
 
@@ -85,10 +84,10 @@ router.post('/info', auth, async (req, res) => {
     try {
         await validateUserInfoReq(req);
 
-        const user = await user.findOne({firebaseUserId: req.userId}).exec();
+        const userDoc = await user.findOne({firebaseUserId: req.userId}).exec();
 
-        const update = userUtil.toPrivateUser(req.body, req.userId, user.version);
-        const changes = collectChanges(user, update);
+        const update = userUtil.toPrivateUser(req.body, req.userId, userDoc.version);
+        const changes = collectChanges(userDoc, update);
 
         // Update only if there is a difference
         if (changes.length === 0) {
@@ -97,7 +96,7 @@ router.post('/info', auth, async (req, res) => {
             const userChangesEntity = {
                 firebaseUserId: req.userId,
                 changes: changes,
-                version: user.version,
+                version: userDoc.version,
                 updateDate: new Date()
             }
 

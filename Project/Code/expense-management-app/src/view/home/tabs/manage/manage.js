@@ -46,7 +46,7 @@ const App = () => {
                             currency: response.data[idx].currency,
                             description: response.data[idx].description,
                             category: response.data[idx].category,
-                            date: new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDay()),
+                            date: new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()),
                             amount: response.data[idx].sum
                         }
                     );

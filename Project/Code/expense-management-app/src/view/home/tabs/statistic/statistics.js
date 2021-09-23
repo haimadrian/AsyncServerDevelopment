@@ -18,7 +18,7 @@ export default function Statistic() {
     const [report, setReport] = useState('Daily');
     const [dayFromData, setDayFromData] = useState(1);
     const [monthFromData, setMonthFromData] = useState(1);
-    const [yearFromData, setYearFromData] = useState(2015);
+    const [yearFromData, setYearFromData] = useState(2021);
     const [generate, setGenerate] = useState(false);
 
     const httpErrorHandler = useCallback(async (error) => {
@@ -82,10 +82,12 @@ export default function Statistic() {
                         {generate === true && report === 'Daily' ?
                             < PieChartStatistics day={dayFromData}
                                                  month={monthFromData}
+                                                 year={yearFromData}
                                                  statData={monthYearly}/>
 
                             : < PieChartStatistics day={dayFromData}
                                                    month={monthFromData}
+                                                   year={yearFromData}
                                                    statData={yearly}/>}
 
                         {generate === true && report === 'Daily' ?
