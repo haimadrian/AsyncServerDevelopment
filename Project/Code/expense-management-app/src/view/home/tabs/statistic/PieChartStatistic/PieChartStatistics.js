@@ -9,6 +9,7 @@ const PieChartStatistics = (props) => {
     let dataFrom = [];
     let dayChoose = '';
     let monthChoose ='';
+    let yearChoose ='';
 
     for (const [_, value] of Object.entries(props.statData)) {
         dataFrom.push(value);
@@ -21,6 +22,7 @@ const PieChartStatistics = (props) => {
                 mDate = new Date(value);
                 dayChoose = mDate.getUTCDate();
                 monthChoose = mDate.getMonth();
+                yearChoose = mDate.getFullYear();
                 console.log(monthChoose);
                 console.log(dayChoose)
                 if (dayChoose == props.day || (monthChoose == props.month && props.day == 0)) {
@@ -47,6 +49,8 @@ const PieChartStatistics = (props) => {
     return (
         <div>
             {data.length > 0 ?
+            <h1>General Data of the Date {props.day != 0 ? props.day +".": ""}{props.month+1 + "." + yearChoose}</h1>:''}
+            {data.length > 0 ?
                 <PieChart width={800} height={400}>
                     <Pie
                         isAnimationActive={false}
@@ -63,7 +67,7 @@ const PieChartStatistics = (props) => {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
                         ))}
                     </Pie>
-                </PieChart> : <h1>No Data Found</h1>}
+                </PieChart>:''}
         </div>
     );
 
