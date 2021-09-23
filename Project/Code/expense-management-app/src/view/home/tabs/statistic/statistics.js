@@ -16,8 +16,8 @@ export default function Statistic() {
     const [yearly, setYearly] = useState('');
     const [monthYearly, setMonthYearly] = useState('');
     const [report, setReport] = useState('Daily');
-    const [day, setDay] = useState(1);
-    const [month, setMonth] = useState(1);
+    const [dayFromData, setDayFromData] = useState(1);
+    const [monthFromData, setMonthFromData] = useState(1);
     const [yearFromData, setYearFromData] = useState(2015);
     const [generate, setGenerate] = useState(false);
     const [hasDataDay, setHasDataDay] = useState(false);
@@ -67,8 +67,8 @@ export default function Statistic() {
 
     const getReport = (year, month, day, getItemReport, getReportGenerate) => {
         setReport(getItemReport);
-        setDay(day);
-        setMonth(month);
+        setDayFromData(day);
+        setMonthFromData(month);
         setYearFromData(year);
         setGenerate(getReportGenerate)
         if(monthYearly.length != 0){
@@ -85,7 +85,7 @@ export default function Statistic() {
             getDataByYearMonth(year, month);
         }
         if (getItemReport === 'Months') {
-            setDay(0);
+            setDayFromData(0);
             console.log("Year from statistic" , year);
             getDataByYear(year);
         }
@@ -109,12 +109,12 @@ export default function Statistic() {
                         </div>
                     </Card>
                     {generate === true && report === 'Daily' ?
-                        < PieChartStatistics day={day}
-                                             month={month}
+                        < PieChartStatistics day={dayFromData}
+                                             month={monthFromData}
                                              statData={monthYearly}/>
 
-                        : < PieChartStatistics day={day}
-                                               month={month}
+                        : < PieChartStatistics day={dayFromData}
+                                               month={monthFromData}
                                                statData={yearly}/>}
                     {generate === true && report === 'Daily' && hasDataDay === false? <h1>No Data found for that Day</h1> : ''}
                     {generate === true && report === 'Months' && hasDataMonthForYear === false? <h1>No Data found for that Month</h1> : ''}
