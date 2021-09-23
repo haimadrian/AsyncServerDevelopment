@@ -61,8 +61,9 @@ export default function Statistic() {
         if(getItemReport === 'Daily') {
             getDataByYearMonth(year, month);
         }
-        else{
+        if(getItemReport === 'Months'){
             setDay(0);
+            console.log("the Year " , year);
             getDataByYear(year);
         }
     }

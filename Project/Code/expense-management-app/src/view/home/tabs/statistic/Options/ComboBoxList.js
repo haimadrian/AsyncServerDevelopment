@@ -20,7 +20,7 @@ const FilterDates = (props) => {
 
 
     const sendDate = ()=>{
-        props.itemReport(years,months,days,selectReport,true);
+        props.itemReport(years,months-1,days,selectReport,true);
     }
 
     //onChange={value => currencyChangeHandler(value)}
