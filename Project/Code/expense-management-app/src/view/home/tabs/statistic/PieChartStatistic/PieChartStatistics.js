@@ -44,7 +44,7 @@ const PieChartStatistics = (props) => {
     }
 
     return (
-        <div>
+        <div className='vert'>
             {data.length > 0 ?
             <h1>General Data of the Date {props.day != 0 ? props.day +".": ""}{props.month+1 + "." + yearChoose}</h1>
                 : <h1>No Data Found For PieChart</h1>}
@@ -53,8 +53,6 @@ const PieChartStatistics = (props) => {
                     <Pie
                         isAnimationActive={false}
                         data={data}
-                        cx={400}
-                        cy={200}
                         fill="#8884d8"
                         dataKey="value"
                         outerRadius={150}

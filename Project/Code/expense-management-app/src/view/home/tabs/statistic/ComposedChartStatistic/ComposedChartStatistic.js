@@ -18,7 +18,7 @@ export default function ComposedChartStatistic(props) {
     }
 
     return (
-        <div>
+        <div className='vert'>
             {data.length > 0 ?
                 <h1>General Data of the Month per Day</h1> : <h1>No Data Found For That Month</h1>}
             {data.length > 0 ?
@@ -33,8 +33,10 @@ export default function ComposedChartStatistic(props) {
                         left: 20
                     }}
                 >
+
+
                     <CartesianGrid stroke="#f5f5f5"/>
-                    <XAxis dataKey="name" scale="band"/>
+                    <XAxis label="Day of Month" dataKey="name" scale="band"/>
                     <YAxis/>
                     <Tooltip/>
                     <Legend/>

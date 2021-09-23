@@ -17,7 +17,7 @@ export default function AreaChartStatistic(props) {
     }
 
     return (
-        <div>
+        <div className='vert'>
             {data.length > 0 ?
                 <h1>General Data of the Month per Year</h1> : <h1>No Data Found For That Year</h1>}
             {data.length > 0 ?
@@ -33,7 +33,7 @@ export default function AreaChartStatistic(props) {
                     }}
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="name"/>
+                    <XAxis label="Month of Year" dataKey="name"/>
                     <YAxis/>
                     <Tooltip/>
                     <Area type="monotone" dataKey="Amount" stroke="#8884d8" fill="#8884d8"/>

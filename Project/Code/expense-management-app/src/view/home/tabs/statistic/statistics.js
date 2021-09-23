@@ -74,25 +74,24 @@ export default function Statistic() {
                     <Card className="expenses-statistic">
                         <div className='expenses-filter'>
                             <div className='expenses-filter-control'>
-                                <div id='filter'>Please Select :</div>
                                 <FilterDates itemReport={getReport}/>
                             </div>
                         </div>
                     </Card>
+                    <div className='horiz'>
+                        {generate === true && report === 'Daily' ?
+                            < PieChartStatistics day={dayFromData}
+                                                 month={monthFromData}
+                                                 statData={monthYearly}/>
 
-                    {generate === true && report === 'Daily' ?
-                        < PieChartStatistics day={dayFromData}
-                                             month={monthFromData}
-                                             statData={monthYearly}/>
+                            : < PieChartStatistics day={dayFromData}
+                                                   month={monthFromData}
+                                                   statData={yearly}/>}
 
-                        : < PieChartStatistics day={dayFromData}
-                                               month={monthFromData}
-                                               statData={yearly}/>}
-
-                    {generate === true && report === 'Daily' ?
-                        <ComposedChartStatistic statData={monthYearly}/>
-                        : <AreaChartStatistic statData={yearly}/>}
-
+                        {generate === true && report === 'Daily' ?
+                            <ComposedChartStatistic statData={monthYearly}/>
+                            : <AreaChartStatistic statData={yearly}/>}
+                    </div>
                 </div>
             </div>
         </div>
