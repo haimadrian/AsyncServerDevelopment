@@ -1,0 +1,55 @@
+#title {
+    color: orangered;
+    margin-left: 1rem ;
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight:bold;
+}
+
+#filter {
+    color: white;
+    font-size: 2rem;
+    text-align: left;
+    margin-left: 1rem;
+    width: 15%;
+}
+
+.expenses-filter-label {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+#form {
+    position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem;
+    margin: 1rem;
+    background-color: white;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+
+.expenses-statistic{
+    padding: 1rem;
+    background-color: #98C1D9;
+    margin: 1rem auto;
+    width: 85%;
+    max-width: 95%;
+
+}
+
+.expenses-filter-control {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 5rem;
+}
+
+#filterCB{
+    width: 30%;
+}
+

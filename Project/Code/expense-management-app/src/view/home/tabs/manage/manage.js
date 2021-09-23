@@ -4,6 +4,9 @@ import NewExpense from "./components/NewExpense/NewExpense";
 import axios from "axios";
 import urls from "../../../../model/backend_url";
 import {potentiallyRefreshToken} from "../../../../firebase";
+import Card from "./components/UI/Card";
+import FilterDates from "../statistic/Options/ComboBoxList";
+import PieChartStatistics from "../statistic/PieChartStatistic/PieChartStatistics";
 
 //App is Main intrance
 const App = () => {
@@ -76,9 +79,14 @@ const App = () => {
     }, []);
 
     return (
-        <div className="App">
-            <NewExpense onAddExpense={addExpenseHandler}/>
-            <Expenses items={expenses} totalData={totalDataCount} dataPages={getData}></Expenses>
+        <div className='frame-profile'>
+            <div id='form'>
+                <div className='card-vertical'>
+                    <NewExpense onAddExpense={addExpenseHandler}/>
+                    <Expenses items={expenses} totalData={totalDataCount} dataPages={getData}></Expenses>
+                </div>
+
+            </div>
         </div>
     );
 };

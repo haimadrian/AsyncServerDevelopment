@@ -27,6 +27,14 @@
     box-sizing: border-box;
 }
 
+.vert {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    clear: both;
+    box-sizing: border-box;
+}
+
 .card-vertical {
     display: flex;
     flex-direction: column;

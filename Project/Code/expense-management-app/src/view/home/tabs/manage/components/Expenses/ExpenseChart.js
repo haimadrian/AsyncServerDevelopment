@@ -17,7 +17,7 @@ const renderQuarterTick = (tickProps) => {
   const quarterNo = Math.floor(month / 3) + 1;
 
   if (month % 3 === 1) {
-    return <text x={x} y={y - 4} textAnchor="middle">{`Q${quarterNo}`}</text>;
+    return <text x={x} y={y - 4} fill='#293241' textAnchor="middle">{`Q${quarterNo}`}</text>;
   }
 
   const isLast = month === 11;
@@ -97,12 +97,12 @@ export default function ExpenseChart(props) {
           margin={{
             top: 5,
             right: 30,
-            left: 20,
+            left: 0,
             bottom: 5
           }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tickFormatter={monthTickFormatter} />
+        <CartesianGrid horizontal={false} vertical={false} fillOpacity={0.6} fill="#3D5A80"/>
+        <XAxis dataKey="date" stroke="black" tickFormatter={monthTickFormatter} />
         <XAxis
             dataKey="date"
             axisLine={false}
@@ -113,10 +113,10 @@ export default function ExpenseChart(props) {
             scale="band"
             xAxisId="quarter"
         />
-        <YAxis />
+        <YAxis stroke="#black"/>
         <Tooltip />
         <Legend />
-        <Bar dataKey="amount" fill="#87459B" />
+        <Bar dataKey="amount" fill="#EE6C4D" />
       </BarChart>
   );
 }

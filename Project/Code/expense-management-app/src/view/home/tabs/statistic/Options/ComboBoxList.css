@@ -1,0 +1,42 @@
+select {
+    margin-right: 2rem;
+}
+
+label {
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
+
+.new-expense__btn-statistic  {
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: .5rem;
+    border: 2px solid #2d9fe2;
+    background-color: #2d9fe2;
+    color: #fff;
+    border-radius: 12px;
+    margin-right: 2rem;
+    margin-left: 6rem;
+    margin-top: 0.5rem;
+}
+
+.new-expense__btn-statistic :hover,
+.new-expense__btn-statistic :active {
+    background-color: #510674;
+    border-color: #510674;
+}
+
+.report{
+    font: inherit;
+    padding: .5rem 3rem;
+    font-weight: 700;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+.report.disabled{
+    pointer-events: none;
+    box-shadow: none;
+    color: #999;
+}

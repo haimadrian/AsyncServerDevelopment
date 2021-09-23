@@ -45,11 +45,7 @@ const ExpenseForm = (props) => {
     };
 
     const currencyChangeHandler = (event) => {
-        let symbol = currencies[currencies.keyFromDisplayValue(event.target.value)];
-        console.log(symbol);
-        console.log(event.target.value);
-        console.log(currencies.keyFromDisplayValue(event.target.value))
-        setEnteredCurrency(symbol);
+        setEnteredCurrency((event.target.value));
     };
 
     const submitHandler = (event) => {
@@ -58,7 +54,7 @@ const ExpenseForm = (props) => {
         const expenseData = {
             description: enteredDescription,
             category: enteredCategory,
-            currency: enteredCurrency,
+            currency: currencies.keyFromDisplayValue(enteredCurrency),
             amount: +enteredAmount,
             date: new Date(enteredDate),
         };
