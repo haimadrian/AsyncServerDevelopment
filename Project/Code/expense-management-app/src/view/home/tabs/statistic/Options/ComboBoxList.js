@@ -18,11 +18,9 @@ const FilterDates = (props) => {
         return selectOption;
     }
 
-    props.itemChooseReport(selectReport)
-
 
     const sendDate = ()=>{
-        props.itemReport(years,months,days);
+        props.itemReport(years,months,days,selectReport,true);
     }
 
     //onChange={value => currencyChangeHandler(value)}
@@ -60,8 +58,7 @@ const FilterDates = (props) => {
                     ))}
                 </select>
                 <label>Months: </label>
-                <select className={`report ${selectReport != 'Months' && selectReport != 'Daily'
-                && selectReport != 'Weekly'  ? 'disabled' : ''}`}
+                <select className={`report ${selectReport != 'Months' && selectReport != 'Daily' ? 'disabled' : ''}`}
                         onChange={monthsChangeHandler}>
                     {dateList(1, 12).map((years) => (
                         <Options dateOption={years}/>

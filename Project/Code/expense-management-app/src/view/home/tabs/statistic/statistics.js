@@ -13,10 +13,11 @@ export default function Statistic() {
     //1. category and amount
     const [yearly, setYearly] = useState('');
     const [monthYearly, setMonthYearly] = useState('');
-    const [report, setReport] = useState('');
-    const [day, setDay] = useState(0);
-    const [month, setMonth] = useState(0);
+    const [report, setReport] = useState('Daily');
+    const [day, setDay] = useState(1);
+    const [month, setMonth] = useState(1);
     const [year, setYear] = useState(2015);
+    const [generate,setGenerate] = useState(false);
 
     const httpErrorHandler = useCallback(async (error) => {
         let errorMessage = error.response?.data?.message;
@@ -28,10 +29,10 @@ export default function Statistic() {
     }, []);
 
 
-    function getDataByYear(year,month) {
-        setDay(0);
-        setMonth(month);
-        setYear(year);
+    function getDataByYear(year) {
+        // setDay(0);
+        // setMonth(month);
+        // setYear(year);
         axios.get(urls.getStatsMonthly(year))
             .then(response => {
                 setYearly(response.data);
@@ -40,10 +41,10 @@ export default function Statistic() {
     }
 
 
-    function getDataByYearMonth(year, month, day) {
-            setDay(day);
-            setMonth(month);
-            setYear(year);
+    function getDataByYearMonth(year, month) {
+        // setDay(day);
+        // setMonth(month);
+        // setYear(year);
         axios.get(urls.getStatsDaily(year, month))
             .then(response => {
                 setMonthYearly(response.data);
@@ -51,13 +52,29 @@ export default function Statistic() {
             .catch(httpErrorHandler);
     }
 
-    const getReport = (getItemReport) =>{
+    const getReport = (year, month, day,getItemReport,getReportGenerate) =>{
         setReport(getItemReport);
+        setDay(day);
+        setMonth(month);
+        setYear(year);
+        setGenerate(getReportGenerate)
+        if(getItemReport === 'Daily') {
+            getDataByYearMonth(year, month);
+        }
+        else{
+            setDay(0);
+            getDataByYear(year);
+        }
     }
 
-    console.log(day);
-    console.log(month);
-    console.log(year);
+
+    // console.log(day);
+    // console.log(month);
+    // console.log(year);
+
+    // <FilterDates itemChooseReport={getReport}
+    //              itemReport = {report === 'Daily' ? getDataByYearMonth : getDataByYear}
+    // />
 
     return (
 
@@ -72,15 +89,15 @@ export default function Statistic() {
                         <div className='expenses-filter'>
                             <div className='expenses-filter-control'>
                                 <div id='filter'>Please Select :</div>
-                                <FilterDates itemChooseReport={getReport}
-                                             itemReport = {report === 'Daily' ? getDataByYearMonth : getDataByYear}
-                                            />
+                                <FilterDates itemReport={getReport}/>
                             </div>
                         </div>
                     </Card>
-                    <PieChartStatistics day={day}
-                                        month={month}
-                                        statData={report === 'Daily' ? monthYearly : yearly}/>
+                    {generate === true ?
+                    < PieChartStatistics day={day}
+                        month={month}
+                        statData={report === 'Daily' ? monthYearly : yearly}/> : ''}
+
                 </div>
             </div>
         </div>
