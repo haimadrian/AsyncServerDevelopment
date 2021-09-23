@@ -5,10 +5,11 @@ import './ComboBoxList.css'
 
 const FilterDates = (props) => {
 
-    const [selectReport,setSelectReport] = useState('Daily');
-    const [days,setDays] = useState(1);
-    const [months,setMonths] = useState(1);
-    const [years,setYears] = useState(2015);
+    const [selectReport, setSelectReport] = useState('Daily');
+    const [days, setDays] = useState(1);
+    const [months, setMonths] = useState(1);
+    const [years, setYears] = useState(2015);
+
     function dateList(start, end) {
         return Array(end - start + 1).fill().map((_, idx) => start + idx);
     }
@@ -19,11 +20,10 @@ const FilterDates = (props) => {
     }
 
 
-    const sendDate = ()=>{
-        props.itemReport(years,months-1,days,selectReport,true);
+    const sendDate = () => {
+        props.itemReport(years, months - 1, days, selectReport, true);
     }
 
-    //onChange={value => currencyChangeHandler(value)}
     const daysChangeHandler = (event) => {
         setDays(event.target.value);
     }
@@ -33,15 +33,11 @@ const FilterDates = (props) => {
 
     const yearsChangeHandler = (event) => {
         setYears(event.target.value);
-        console.log("Years are : " ,event.target.value);
 
     }
     const selectReportChangeHandler = (event) => {
         setSelectReport(event.target.value);
     }
-
-    //className={`next ${currentPage === pages ? 'disabled' : ''}`}
-    //className={`${yearsChangeHandler() === 'Daily' ? 'disabled' : ''}`}
 
     return (
         <div className='expenses-filter'>
@@ -49,7 +45,7 @@ const FilterDates = (props) => {
                 <label>Report: </label>
                 <select className='report' onChange={selectReportChangeHandler}>
                     {selection().map((select) => (
-                        <Options dateOption={select} />
+                        <Options dateOption={select}/>
                     ))}
                 </select>
                 <label>Days: </label>

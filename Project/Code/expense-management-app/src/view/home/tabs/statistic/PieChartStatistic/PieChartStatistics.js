@@ -46,7 +46,8 @@ const PieChartStatistics = (props) => {
     return (
         <div>
             {data.length > 0 ?
-            <h1>General Data of the Date {props.day != 0 ? props.day +".": ""}{props.month+1 + "." + yearChoose}</h1>:''}
+            <h1>General Data of the Date {props.day != 0 ? props.day +".": ""}{props.month+1 + "." + yearChoose}</h1>
+                : <h1>No Data Found For PieChart</h1>}
             {data.length > 0 ?
                 <PieChart width={800} height={400}>
                     <Pie

@@ -20,13 +20,6 @@ export default function Statistic() {
     const [monthFromData, setMonthFromData] = useState(1);
     const [yearFromData, setYearFromData] = useState(2015);
     const [generate, setGenerate] = useState(false);
-    const [hasDataDay, setHasDataDay] = useState(false);
-    const [hasDataMonth, setHasDataMonth] = useState(false);
-    const [hasDataYear, setHasDataYear] = useState(false);
-    const [hasDataMonthForYear, setHasDataMonthForYear] = useState(false);
-
-
-
 
     const httpErrorHandler = useCallback(async (error) => {
         let errorMessage = error.response?.data?.message;
@@ -42,11 +35,6 @@ export default function Statistic() {
         axios.get(urls.getStatsMonthly(year))
             .then(response => {
                 setYearly(response.data);
-                if(response.data.length != 0)
-                    setHasDataYear(true);
-                else{
-                    setHasDataYear(false);
-                }
             })
             .catch(httpErrorHandler);
     }
@@ -56,11 +44,6 @@ export default function Statistic() {
         axios.get(urls.getStatsDaily(year, month))
             .then(response => {
                 setMonthYearly(response.data);
-                if(response.data.length != 0)
-                    setHasDataMonth(true);
-                else{
-                    setHasDataMonth(false);
-                }
             })
             .catch(httpErrorHandler);
     }
@@ -71,26 +54,14 @@ export default function Statistic() {
         setMonthFromData(month);
         setYearFromData(year);
         setGenerate(getReportGenerate)
-        if(monthYearly.length != 0){
-            setHasDataDay(true);
-        }else{
-            setHasDataDay(false);
-        }
-        if(yearly.length != 0){
-            setHasDataMonthForYear(true);
-        }else{
-            setHasDataMonthForYear(false);
-        }
         if (getItemReport === 'Daily') {
             getDataByYearMonth(year, month);
         }
         if (getItemReport === 'Months') {
             setDayFromData(0);
-            console.log("Year from statistic" , year);
             getDataByYear(year);
         }
     }
-
 
     return (
         <div className='frame-profile'>
@@ -108,6 +79,7 @@ export default function Statistic() {
                             </div>
                         </div>
                     </Card>
+
                     {generate === true && report === 'Daily' ?
                         < PieChartStatistics day={dayFromData}
                                              month={monthFromData}
@@ -116,22 +88,14 @@ export default function Statistic() {
                         : < PieChartStatistics day={dayFromData}
                                                month={monthFromData}
                                                statData={yearly}/>}
-                    {generate === true && report === 'Daily' && hasDataDay === false? <h1>No Data found for that Day</h1> : ''}
-                    {generate === true && report === 'Months' && hasDataMonthForYear === false? <h1>No Data found for that Month</h1> : ''}
-
-
 
                     {generate === true && report === 'Daily' ?
                         <ComposedChartStatistic statData={monthYearly}/>
-                        : <AreaChartStatistic statData={yearly} />}
-
-                    {generate === true && report === 'Daily' && hasDataMonth === false? <h1>No Data found for that Month</h1> : ''}
-                    {generate === true && report === 'Months' && hasDataYear === false? <h1>No Data found for that Year</h1> : ''}
+                        : <AreaChartStatistic statData={yearly}/>}
 
                 </div>
             </div>
         </div>
-
     );
 }
 
