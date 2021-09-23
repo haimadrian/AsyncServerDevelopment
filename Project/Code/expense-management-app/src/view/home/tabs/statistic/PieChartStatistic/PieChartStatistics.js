@@ -15,7 +15,6 @@ const PieChartStatistics = (props) => {
         dataFrom.push(value);
     }
 
-    console.log(dataFrom);
     dataFrom.map(el => {
         for (let [keys, value] of Object.entries(el)) {
             if (keys === 'date') {
@@ -23,8 +22,6 @@ const PieChartStatistics = (props) => {
                 dayChoose = mDate.getUTCDate();
                 monthChoose = mDate.getMonth();
                 yearChoose = mDate.getFullYear();
-                console.log(monthChoose);
-                console.log(dayChoose)
                 if (dayChoose == props.day || (monthChoose == props.month && props.day == 0)) {
                     for (let [_, categoryToExpenses] of Object.entries(el['categoryToExpenses'])) {
                         data.push({

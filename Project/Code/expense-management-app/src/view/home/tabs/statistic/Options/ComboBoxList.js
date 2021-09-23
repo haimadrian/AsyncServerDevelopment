@@ -33,6 +33,8 @@ const FilterDates = (props) => {
 
     const yearsChangeHandler = (event) => {
         setYears(event.target.value);
+        console.log("Years are : " ,event.target.value);
+
     }
     const selectReportChangeHandler = (event) => {
         setSelectReport(event.target.value);

@@ -12,7 +12,6 @@ import {
 
 export default function ComposedChartStatistic(props) {
     const data = [];
-    console.log("Iam new Chart : ", props.statData);
     for (let keys of props.statData) {
         const turnDate = new Date(keys.date)
         data.push({name: turnDate.getUTCDate() , uv: keys.totalExpenses});
