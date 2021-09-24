@@ -74,7 +74,10 @@ function listProducts(req, res) {
     });
 }
 
-mongoose.connect(`mongodb+srv://ServerTeam:QazWSX123@cluster0.xjg7v.mongodb.net/products_haim?retryWrites=true&w=majority`,
+const mongoDbHost = process.env.EXPENSE_DB_HOST;
+const mongoDbUser = process.env.EXPENSE_DB_USERNAME;
+const mongoDbPwd = process.env.EXPENSE_DB_PWD;
+mongoose.connect('mongodb+srv://' + mongoDbUser + ':' + mongoDbPwd + '@' + mongoDbHost + '/user_management?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true, keepAlive: true, keepAliveInitialDelay: 300000 }) // Keep alive for 5 minutes
         .catch(error => console.log(`Failed connecting to MongoDB. Reason: ${error}`));
 const connection = mongoose.connection;
