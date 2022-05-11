@@ -19,7 +19,7 @@ const startStatisticsJob = () => {
     const yesterday = (relativeTo) => {
         const startTime = new Date(relativeTo);
         startTime.setUTCHours(0, 0, 0, 0);
-        startTime.setUTCDate(relativeTo.getUTCDate() - 1);
+        startTime.setUTCDate(relativeTo.getDate() - 1);
         return startTime;
     };
 
@@ -311,13 +311,16 @@ const startStatisticsJob = () => {
         }
     };
 
-    /*
+
     // For DEV purposes we can run through a whole year and calculate statistics for
     // expenses from the past. (since the default behavior of statistics job is
     // to calculate daa for the past day only.)
-    let today = new Date(Date.now());
+    /*let today = new Date(Date.now());
     today.setUTCHours(0, 0, 0, 0);
-    doAggregationsForRange(new Date(2021, 0, 1, 0, 0, 0, 0), today);*/
+    let startTime = new Date();
+    startTime.setUTCFullYear(2021, 0, 1);
+    startTime.setUTCHours(0, 0, 0, 0);
+    doAggregationsForRange(startTime, today);*/
 
     // Use an expression to define our schedule. There are 6 parts, where the first
     // part is optional. Each part represents, from left to right:
